@@ -201,7 +201,7 @@ def execute_code(request):
 
         # The hook is removed by only passing the target function and its arguments.
         # This is the correct call for your use case.
-        task_id = async_task(run_docker_command, media_name, code)
+        task_id = async_task('manim.views.run_docker_command', media_name, code)
         print('Docker task started asynchronously')
         print(f'task id: {task_id}')
         result_message = ""
