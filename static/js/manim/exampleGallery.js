@@ -12,65 +12,63 @@ class BraceAnnotation(Scene):
         b2text = b2.get_tex("x-x_1")
         self.add(line, dot, dot2, b1, b2, b1text, b2text)
 `,
+        "VectorArrow":`from manim import *
+
+class VectorArrow(Scene):
+    def construct(self):
+        dot = Dot(ORIGIN)
+        arrow = Arrow(ORIGIN, [2, 2, 0], buff=0)
+        numberplane = NumberPlane()
+        origin_text = Text('(0, 0)').next_to(dot, DOWN)
+        tip_text = Text('(2, 2)').next_to(arrow.get_end(), RIGHT)
+        self.add(numberplane, dot, arrow, origin_text, tip_text)
+`,
+        "GradientImageFromArray":`from manim import *
+
+class GradientImageFromArray(Scene):
+    def construct(self):
+        n = 256
+        imageArray = np.uint8(
+            [[i * 256 / n for i in range(0, n)] for _ in range(0, n)]
+        )
+        image = ImageMobject(imageArray).scale(2)
+        image.background_rectangle = SurroundingRectangle(image, color=GREEN)
+        self.add(image, image.background_rectangle)
+`,
         "BooleanOperations": `from manim import *
 
 class BooleanOperations(Scene):
     def construct(self):
-        # Create two ellipses
         ellipse1 = Ellipse(
-            width=4.0,
-            height=5.0,
-            fill_opacity=0.5,
-            color=BLUE,
-            stroke_width=10
+            width=4.0, height=5.0, fill_opacity=0.5, color=BLUE, stroke_width=10
         ).move_to(LEFT)
         ellipse2 = ellipse1.copy().set_color(color=RED).move_to(RIGHT)
-
-        # Group for initial display
-        bool_ops_text = MarkupText("<u>Boolean Operations</u>").next_to(ellipse1, UP * 3)
+        bool_ops_text = MarkupText("<u>Boolean Operation</u>").next_to(ellipse1, UP * 3)
         ellipse_group = Group(bool_ops_text, ellipse1, ellipse2).move_to(LEFT * 3)
         self.play(FadeIn(ellipse_group))
-        self.wait(1)
 
-        # Union
-        union_text = Text("Union").next_to(ellipse_group, UP * 3)
-        # The Union class performs the union operation on mobjects.
-        union_mobject = Union(ellipse1, ellipse2, fill_opacity=0.5, color=GREEN)
-        self.play(
-            Transform(ellipse_group, Group(union_text, union_mobject.copy().move_to(LEFT * 3))),
-            FadeOut(bool_ops_text)
-        )
-        self.wait(1)
+        i = Intersection(ellipse1, ellipse2, color=GREEN, fill_opacity=0.5)
+        self.play(i.animate.scale(0.25).move_to(RIGHT * 5 + UP * 2.5))
+        intersection_text = Text("Intersection", font_size=23).next_to(i, UP)
+        self.play(FadeIn(intersection_text))
 
-        # Intersection
-        intersection_text = Text("Intersection").next_to(ellipse_group, UP * 3)
-        # The Intersection class performs the intersection operation.
-        intersection_mobject = Intersection(ellipse1, ellipse2, fill_opacity=0.5, color=YELLOW)
-        self.play(
-            Transform(ellipse_group, Group(intersection_text, intersection_mobject.copy().move_to(LEFT * 3))),
-            FadeOut(union_text)
-        )
-        self.wait(1)
+        u = Union(ellipse1, ellipse2, color=ORANGE, fill_opacity=0.5)
+        union_text = Text("Union", font_size=23)
+        self.play(u.animate.scale(0.3).next_to(i, DOWN, buff=union_text.height * 3))
+        union_text.next_to(u, UP)
+        self.play(FadeIn(union_text))
 
-        # Difference (ellipse1 - ellipse2)
-        difference_text = Text("Difference (Blue - Red)").next_to(ellipse_group, UP * 3)
-        # The Difference class subtracts the second mobject from the first.
-        difference_mobject = Difference(ellipse1, ellipse2, fill_opacity=0.5, color=PURPLE)
-        self.play(
-            Transform(ellipse_group, Group(difference_text, difference_mobject.copy().move_to(LEFT * 3))),
-            FadeOut(intersection_text)
-        )
-        self.wait(1)
+        e = Exclusion(ellipse1, ellipse2, color=YELLOW, fill_opacity=0.5)
+        exclusion_text = Text("Exclusion", font_size=23)
+        self.play(e.animate.scale(0.3).next_to(u, DOWN, buff=exclusion_text.height * 3.5))
+        exclusion_text.next_to(e, UP)
+        self.play(FadeIn(exclusion_text))
 
-        # Exclusion (XOR)
-        exclusion_text = Text("Exclusion (XOR)").next_to(ellipse_group, UP * 3)
-        # The Exclusion class finds the XOR between two VMobjects.
-        exclusion_mobject = Exclusion(ellipse1, ellipse2, fill_opacity=0.5, color=ORANGE)
-        self.play(
-            Transform(ellipse_group, Group(exclusion_text, exclusion_mobject.copy().move_to(LEFT * 3))),
-            FadeOut(difference_text)
-        )
-        self.wait(2)
+        d = Difference(ellipse1, ellipse2, color=PINK, fill_opacity=0.5)
+        difference_text = Text("Difference", font_size=23)
+        self.play(d.animate.scale(0.3).next_to(u, LEFT, buff=difference_text.height * 3.5))
+        difference_text.next_to(d, UP)
+        self.play(FadeIn(difference_text))
 `,
         "PointMovingOnShapes": `from manim import *
 
@@ -104,85 +102,87 @@ class PointMovingOnShapes(Scene):
         self.play(MoveAlongPath(dot, circle), run_time=2)
         self.wait(1)
 `,
+        "MovingAround":`from manim import *
+
+class MovingAround(Scene):
+    def construct(self):
+        square = Square(color=BLUE, fill_opacity=1)
+
+        self.play(square.animate.shift(LEFT))
+        self.play(square.animate.set_fill(ORANGE))
+        self.play(square.animate.scale(0.3))
+        self.play(square.animate.rotate(0.4))
+`,
         "MovingAngle": `from manim import *
 
-class MovingAngleExample(Scene):
+class MovingAngle(Scene):
     def construct(self):
         rotation_center = LEFT
+
         theta_tracker = ValueTracker(110)
-
-        line1 = Line(ORIGIN, RIGHT * 4).shift(rotation_center)
-        line2 = Line(ORIGIN, RIGHT * 4).shift(rotation_center)
-        line2.rotate(theta_tracker.get_value() * DEGREES, about_point=rotation_center)
-
-        arc = Angle(line1, line2, radius=0.8, other_angle=False)
-        
-        # Create a label for the angle
-        label = MathTex(r"\\theta").next_to(arc, UP)
-
-        self.add(line1, line2, arc, label)
-
-        self.play(
-            theta_tracker.animate.set_value(40),
-            run_time=2
+        line1 = Line(LEFT, RIGHT)
+        line_moving = Line(LEFT, RIGHT)
+        line_ref = line_moving.copy()
+        line_moving.rotate(
+            theta_tracker.get_value() * DEGREES, about_point=rotation_center
         )
-        self.wait(0.5)
-
-        self.play(
-            theta_tracker.animate.set_value(200),
-            run_time=3
-        )
-        self.wait(0.5)
-
-        # Update the angle and label dynamically
-        arc.add_updater(
-            lambda m: m.become(Angle(line1, line2, radius=0.8, other_angle=False))
-        )
-        label.add_updater(
-            lambda m: m.next_to(arc, UP)
-        )
-        line2.add_updater(
-            lambda m: m.set_rotation(theta_tracker.get_value() * DEGREES, about_point=rotation_center)
+        a = Angle(line1, line_moving, radius=0.5, other_angle=False)
+        tex = MathTex(r"\\theta").move_to(
+            Angle(
+                line1, line_moving, radius=0.5 + 3 * SMALL_BUFF, other_angle=False
+            ).point_from_proportion(0.5)
         )
 
-        self.play(
-            theta_tracker.animate.set_value(110),
-            run_time=2
+        self.add(line1, line_moving, a, tex)
+        self.wait()
+
+        line_moving.add_updater(
+            lambda x: x.become(line_ref.copy()).rotate(
+                theta_tracker.get_value() * DEGREES, about_point=rotation_center
+            )
         )
-        self.wait(1)
+
+        a.add_updater(
+            lambda x: x.become(Angle(line1, line_moving, radius=0.5, other_angle=False))
+        )
+        tex.add_updater(
+            lambda x: x.move_to(
+                Angle(
+                    line1, line_moving, radius=0.5 + 3 * SMALL_BUFF, other_angle=False
+                ).point_from_proportion(0.5)
+            )
+        )
+
+        self.play(theta_tracker.animate.set_value(40))
+        self.play(theta_tracker.animate.increment_value(140))
+        self.play(tex.animate.set_color(RED), run_time=0.5)
+        self.play(theta_tracker.animate.set_value(350))
 `,
-        "SinAndCosFunctionPlot": `from manim import *
+        "MovingDots":`from manim import *
 
-class SinAndCosFunctionPlot(Scene):
+class MovingDots(Scene):
     def construct(self):
-        # Create axes
-        axes = Axes(
-            x_range=[-2 * PI, 2 * PI, PI / 2],  # X-axis from -2π to 2π with π/2 steps
-            y_range=[-1.5, 1.5, 0.5],           # Y-axis from -1.5 to 1.5 with 0.5 steps
-            x_length=10,                        # Length of the X-axis
-            y_length=6,                         # Length of the Y-axis
-            axis_config={"color": GRAY},
-            tips=False,
-        ).add_coordinates()
+        d1,d2=Dot(color=BLUE),Dot(color=GREEN)
+        dg=VGroup(d1,d2).arrange(RIGHT,buff=1)
+        l1=Line(d1.get_center(),d2.get_center()).set_color(RED)
+        x=ValueTracker(0)
+        y=ValueTracker(0)
+        d1.add_updater(lambda z: z.set_x(x.get_value()))
+        d2.add_updater(lambda z: z.set_y(y.get_value()))
+        l1.add_updater(lambda z: z.become(Line(d1.get_center(),d2.get_center())))
+        self.add(d1,d2,l1)
+        self.play(x.animate.set_value(5))
+        self.play(y.animate.set_value(4))
+        self.wait()
+`,
+        "MovingGroupToDestination":`from manim import *
 
-        # Create labels for the axes
-        labels = axes.get_axis_labels(
-            x_label=Tex("x"),
-            y_label=Tex("f(x)")
-        )
-
-        # Define the sine and cosine functions
-        sin_graph = axes.plot(lambda x: np.sin(x), color=BLUE)
-        cos_graph = axes.plot(lambda x: np.cos(x), color=RED)
-
-        # Create labels for the functions
-        sin_label = axes.get_graph_label(sin_graph, Tex("sin(x)"), x_val=PI/2, direction=UP)
-        cos_label = axes.get_graph_label(cos_graph, Tex("cos(x)"), x_val=0, direction=UP)
-
-        # Add everything to the scene
-        self.play(Create(axes), Write(labels))
-        self.play(Create(sin_graph), Create(cos_graph))
-        self.play(Write(sin_label), Write(cos_label))
-        self.wait(2)
+class MovingGroupToDestination(Scene):
+    def construct(self):
+        group = VGroup(Dot(LEFT), Dot(ORIGIN), Dot(RIGHT, color=RED), Dot(2 * RIGHT)).scale(1.4)
+        dest = Dot([4, 3, 0], color=YELLOW)
+        self.add(group, dest)
+        self.play(group.animate.shift(dest.get_center() - group[2].get_center()))
+        self.wait(0.5)
 `
     };
