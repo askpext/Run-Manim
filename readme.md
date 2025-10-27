@@ -1,4 +1,4 @@
-# CloudPy
+# runwith
 
  Run Python libraries online with ease
 
@@ -10,7 +10,7 @@
  - Continue your work seamlessly across different devices.
  - Run in mobile phones and tablets with ease.
    
- Visit [cloudpy.online](https://cloudpy.online) to use the website.
+ Visit [runwith.cloud](https://runwith.cloud) to use the website.
  
 
 
@@ -29,8 +29,8 @@
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/thesophile/CloudPy.git 
-   cd CloudPy
+   git clone https://github.com/thesophile/runwith.git 
+   cd runwith
    ```
 2. **Create a Virtual Environment:**
 
