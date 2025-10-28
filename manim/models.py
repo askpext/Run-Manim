@@ -10,3 +10,9 @@ class Code(models.Model):
         return f"Code for {self.user.username}"
  
 
+
+class ClusterHeartbeat(models.Model):
+    last_ping = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Cluster last ping: {self.last_ping}"

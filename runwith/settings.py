@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'home',
-    'manim',
+    'manim.apps.ManimConfig',
     'accounts',
     'django_q',
 ]

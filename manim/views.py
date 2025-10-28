@@ -8,6 +8,7 @@ import ast
 import uuid
 
 from .models import Code 
+from .models import ClusterHeartbeat
 
 from .utils import *
 from .cache_utils import *
@@ -23,9 +24,7 @@ from django_q.conf import Conf
 from datetime import timedelta
 from django.utils import timezone
 
-
-
-
+ 
 
 
 def run_manim_command(image_name, base_dir, media_name, code_filename):
@@ -42,7 +41,7 @@ def run_manim_command(image_name, base_dir, media_name, code_filename):
     docker_command = f"manim -ql /mnt/code/{code_filename} -o /mnt/output/{media_name}"
 
     # Resource limits
-    mem_limit = "512m"     # 512MB memory
+    mem_limit = "512m"     # 512MB memory out of 1 gb
     cpus = 0.8             # max 0.8 of 1 vCPU
     pids_limit = 64        # max processes
 
@@ -160,15 +159,13 @@ def validate_user_input(user_input):
     except SyntaxError:
         return False
 
+
+def cluster_is_running(threshold_seconds=90):
+    threshold = timezone.now() - timedelta(seconds=threshold_seconds)
+    print(f'Heartbeat detected: {ClusterHeartbeat.objects.filter(last_ping__gt=threshold).exists()}')
+    return ClusterHeartbeat.objects.filter(last_ping__gt=threshold).exists() 
  
- 
-def cluster_is_running():
-    return True
-    #        Stat.objects.filter(
-    #     last_ping__gt=timezone.now() - timedelta(seconds=Conf.CLUSTER_TIMEOUT),
-    #     host__isnull=False,
-    #     stop__isnull=True
-    # ).exists()
+
 
 
 
@@ -211,7 +208,6 @@ def execute_code(request):
         # python_file = save_python_code_to_file(code) #in utils.py - NO LONGER NEEDED HERE
 
         previous_code = code
-        #save code to cache
         save_to_cache(previous_code)
 
         # find class name
@@ -223,8 +219,6 @@ def execute_code(request):
         media_name = f"{class_name}_{random_id}"
         print(f'media_name: {media_name}')
 
-        # The hook is removed by only passing the target function and its arguments.
-        # This is the correct call for your use case.
         task_id = async_task('manim.views.run_docker_command', media_name, code)
         print('Docker task started asynchronously')
         print(f'task id: {task_id}')
@@ -270,7 +264,6 @@ def save_new_code(request):
             set_current_code_name(name)
             print('code saved')
             # return redirect('home')  # Redirect to home page or wherever you want
-        # Handle case where name is not provided (optional)
     return redirect('manim_home')  # Redirect back to execute page after saving
 
     
@@ -330,7 +323,6 @@ def set_code_name(request):
         data = json.loads(request.body)  # Parse JSON data from the request
         code_name = data.get('code_name')
 
-        # Call your util.py function
         result = set_current_code_name(code_name)
 
         # Respond with success
@@ -342,7 +334,6 @@ def get_code_name(request):
     if request.method == "POST":
         import json
 
-        # Call your util.py function
         result = get_current_code_name()
 
         # Respond with success
