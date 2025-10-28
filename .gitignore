@@ -12,3 +12,5 @@ media/*
 !media/keep
 
 staticfiles/*
+
+db.sqlite3
