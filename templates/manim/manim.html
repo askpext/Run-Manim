@@ -129,9 +129,23 @@
 
 
         <div class="media-section">
-            {{ result_message }}
+            {% if result_message %}
+                <div class="error-message">{{ result_message }}</div>
+            {% endif %}
 
+            {%if no_cluster %}
+                <script>
+                    document.getElementById('spinner').style.display = 'none';
+                </script>
+            {% endif %}
+
+            <script>
+                let stopChecking = false;
+            </script>
+
+            {% if not cluster_error %}
             <div id="spinner" class="spinner"></div>
+            {% endif %}
 
             {% if placeholder %}
                 <img src="{% static 'img/placeholder.png' %}" alt="Image" id="placeholder">
@@ -142,6 +156,8 @@
                 </video>
                 <a id="download-video" href="" class="download-btn" download>Download</a>
                 <p id="loading-message-video" style="display: none;" >Generating video...</p>
+                
+
 
                 <script>
                     const videoUrl = "{{ MEDIA_URL }}{{ media_name }}.mp4";
@@ -156,6 +172,8 @@
                     spinner.style.display = 'block';
 
                     function checkVideo() {
+                        if (stopChecking) return;
+
                         fetch(videoUrl, { method: 'HEAD' })
                             .then(res => {
                                 if (res.ok) {
@@ -196,6 +214,7 @@
 
 
                     function checkImage() {
+                        if (stopChecking) return;
                         fetch(imageUrl, { method: 'HEAD' })
                             .then(res => {
                                 if (res.ok) {
@@ -225,37 +244,45 @@
                 <div id="statusBox">Starting Up...</div>
                 <script>
                     const taskStatusUrlTemplate = "{% url 'task-status' 'TASK_ID_PLACEHOLDER' %}";
-                    const taskId = "{{ task_id }}";
+                    const taskId = "{{ task_id }}"; 
+                    const startTime = Date.now();
+                    const maxPollingTime = 360000; // 6 minutes (300s docker timeout + 60s buffer)
+                    
+
                     function pollStatus(id) {
+                        // Check if polling has timed out
+                        if (Date.now() - startTime > maxPollingTime) {
+                            document.getElementById('statusBox').textContent = '❌ Error: Task timed out. The server may be busy.';
+                            spinner.style.display = 'none';
+                            console.log(Date.now() - startTime);
+                            stopChecking = true
+                            return;
+                        }
+
                         const url = taskStatusUrlTemplate.replace('TASK_ID_PLACEHOLDER', id);
                         fetch(url)
                             .then(res => res.json())
                             .then(data => {
                                 console.log('data received:', data);
                                 const statusBox = document.getElementById('statusBox');
-                                // if (data.status === 'initializing') {
-                                //     statusBox.textContent = 'Initializing...';
-                                // } else 
                                 if (data.status === 'queued') {
                                     statusBox.textContent = 'You are Queued...';
                                 } else if (data.status === 'processing') {
                                     statusBox.textContent = 'processing...';
                                 } else if (data.status === 'done') {
                                     statusBox.textContent = '';
+                                    stopChecking = true
                                     return;
                                 } else if (data.status === 'failed') {
                                     statusBox.textContent = '❌ Task failed.';
+                                    spinner.style.display = 'none';
+                                    stopChecking = true
                                     return;
                                 }
-                                //  else if (data.status === 'unknown') {
-                                //     statusBox.textContent = 'Unknown';
-                                //     // return;
-                                // }
                                 setTimeout(() => pollStatus(id), 2000);
                             })
                             .catch(() => {
                                 document.getElementById('statusBox').textContent = 'status unknown';
-                                // setTimeout(() => pollStatus(id), 2000);
                             });
                     }
                     pollStatus(taskId);

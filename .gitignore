@@ -10,3 +10,5 @@ runwithenv/
 # Ignore all contents of the media folder except for the keep file
 media/*
 !media/keep
+
+staticfiles/*

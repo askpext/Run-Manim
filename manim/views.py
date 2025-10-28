@@ -19,6 +19,9 @@ from django.views.decorators.csrf import csrf_exempt
 
 from django_q.tasks import async_task
 from django_q.models import OrmQ, Task
+from django_q.conf import Conf
+from datetime import timedelta
+from django.utils import timezone
 
 
 
@@ -159,7 +162,13 @@ def validate_user_input(user_input):
 
  
  
-
+def cluster_is_running():
+    return True
+    #        Stat.objects.filter(
+    #     last_ping__gt=timezone.now() - timedelta(seconds=Conf.CLUSTER_TIMEOUT),
+    #     host__isnull=False,
+    #     stop__isnull=True
+    # ).exists()
 
 
 
@@ -174,6 +183,21 @@ def execute_code(request):
     current_code_name = get_current_code_name()
 
     if request.method == 'POST' and request.POST.get('form_type') == 'execute':
+        # Health check: Verify that a Q cluster is running
+        cluster_alive = cluster_is_running()
+
+        if not cluster_alive:
+            # If no cluster is running, return an error message immediately
+            context = {
+                'result_message': "Error: The processing service is currently unavailable. Please try again later.",
+                'previous_code': request.POST.get('code', ''),
+                'saved_codes': saved_codes,
+                'request': request,
+                'current_code_name': current_code_name,
+                'cluster_error': True,
+            }
+            return render(request, 'manim/manim.html', context)
+
         processsed = False
         #delete old files
         media_dir = os.path.join(settings.BASE_DIR, 'media')
