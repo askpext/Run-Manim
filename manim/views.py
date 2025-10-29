@@ -81,10 +81,13 @@ def run_manim_command(image_name, base_dir, media_name, code_filename):
 
     except docker.errors.ContainerError as e:
         print(f"Container failed: {e}")
+        raise
     except docker.errors.APIError as e:
         print(f"Docker API error: {e}")
+        raise
     except Exception as e:
         print(f"Unexpected error: {e}")
+        raise
     finally:
         if container:
             try:
@@ -348,6 +351,7 @@ def get_task_status(task_id):
     # 1. Completed or failed
     if Task.objects.filter(id=task_id).exists():
         task = Task.objects.get(id=task_id)
+        print(f'completed task :{task_id}')
         return "done" if task.success else "failed"
 
     # 2. Still queued

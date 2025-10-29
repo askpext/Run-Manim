@@ -18,10 +18,10 @@
 
 ### Prerequisites
 
-- **Python:** 3.11 (tested), but other versions may work.
+- **Python:** 3.10 and above. (otherwise django 5.1 wont work, which is needed for django_q2 to work)
 - **Virtualenv** (optional but recommended)
 - **Git**
-- **pip**: For installing Python packages.
+- **pip**
 
  
 
