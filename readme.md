@@ -2,7 +2,10 @@
 
  Run Python libraries online with ease
 
- <img src="https://github.com/user-attachments/assets/6c703603-9cfc-483b-9f83-efb3fe6d9253" alt="screenshot" width="800" />
+<!-- <img src="https://github.com/user-attachments/assets/6c703603-9cfc-483b-9f83-efb3fe6d9253" alt="screenshot" width="800" /> -->
+
+ ![manim_runwith](https://github.com/user-attachments/assets/b7d08c2e-db6f-4c07-beff-ac4c6b70f863)
+
 
 ## Key Features
   
@@ -89,6 +92,7 @@
     ```
     python manage.py runserver
     ```
+
 
 
 
