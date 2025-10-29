@@ -60,24 +60,35 @@
 
     **Give permission for docker to write to media**
 
-    ```
-    sudo chown -R <container_UID>:<container_GID> media
-    ``` 
-    where container_UID and container_GID are both `1000`. but you can check with:
-    ```
-    docker run --rm manimcommunity/manim id
-    ```
+     ```
+     sudo chown -R 1000:1000 media
+     ```
+      
+     >where its really
+     >`sudo chown -R <container_UID>:<container_GID> /path/to/media`
+     > here container_UID and container_GID are both `1000`. but you can check with:
+     >```
+     >docker run --rm manimcommunity/manim id
+     >```
+
     
-5. **Run Migrations:**
+5. **Run Migrations and collecstatic:**
 
     ```
     python manage.py migrate
     ```
+
+    ```
+    python manage.py collectstatic 
+    ```
+
+    Or just set Debug = True, no need for collecstatic
     
 6. **Start the Development Server:**
 
     ```
     python manage.py runserver
     ```
+
 
 
