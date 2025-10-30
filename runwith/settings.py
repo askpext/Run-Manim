@@ -164,3 +164,11 @@ CACHES = {
 }
 
 
+INSTALLED_APPS += ['django_hosts']
+
+MIDDLEWARE.insert(0, 'django_hosts.middleware.HostsRequestMiddleware')
+MIDDLEWARE.append('django_hosts.middleware.HostsResponseMiddleware')
+
+ROOT_HOSTCONF = 'runwith.hosts'
+DEFAULT_HOST = 'www'
+ROOT_URLCONF = 'runwith.urls'

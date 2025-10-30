@@ -4,3 +4,4 @@ requests==2.32.3
 gunicorn
 whitenoise
 django-q2==1.8.0
+django-hosts
