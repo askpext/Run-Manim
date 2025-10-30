@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'home',
+    'core',
     'manim.apps.ManimConfig',
     'accounts',
     'django_q',
@@ -163,6 +163,8 @@ CACHES = {
     }
 }
 
+# for subdomain manim.runwith.cloud
+# uses django_hosts
 
 INSTALLED_APPS += ['django_hosts']
 
@@ -173,7 +175,16 @@ ROOT_HOSTCONF = 'runwith.hosts'
 DEFAULT_HOST = 'www'
 ROOT_URLCONF = 'runwith.urls'
 
+DEFAULT_REDIRECT_URL = 'https://runwith.cloud'
+PARENT_HOST = 'runwith.cloud'
+
+
+# CSRF and Cookie Security Settings
 
 CSRF_TRUSTED_ORIGINS = ["https://runwith.cloud", "https://www.runwith.cloud"]
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
+
+#so that login in app app ensures login in all apps
+SESSION_COOKIE_DOMAIN = ".runwith.cloud"
+CSRF_COOKIE_DOMAIN = ".runwith.cloud"
