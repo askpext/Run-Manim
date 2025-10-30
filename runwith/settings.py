@@ -172,3 +172,8 @@ MIDDLEWARE.append('django_hosts.middleware.HostsResponseMiddleware')
 ROOT_HOSTCONF = 'runwith.hosts'
 DEFAULT_HOST = 'www'
 ROOT_URLCONF = 'runwith.urls'
+
+
+CSRF_TRUSTED_ORIGINS = ["https://runwith.cloud", "https://www.runwith.cloud"]
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
