@@ -181,7 +181,7 @@ PARENT_HOST = 'runwith.cloud'
 
 # CSRF and Cookie Security Settings
 
-CSRF_TRUSTED_ORIGINS = ["https://runwith.cloud", "https://www.runwith.cloud"]
+CSRF_TRUSTED_ORIGINS = ["https://runwith.cloud", "https://www.runwith.cloud", "https://manim.runwith.cloud"]
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
