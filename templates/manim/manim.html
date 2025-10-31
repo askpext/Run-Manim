@@ -243,7 +243,7 @@
             {% if task_id %}
                 <div id="statusBox">Starting Up...</div>
                 <script>
-                    const taskStatusUrlTemplate = "{% url 'task-status' 'TASK_ID_PLACEHOLDER' %}";
+                    const taskStatusUrlTemplate = "{% host_url 'task-status' 'TASK_ID_PLACEHOLDER' %}";
                     const taskId = "{{ task_id }}"; 
                     const startTime = Date.now();
                     const maxPollingTime = 360000; // 6 minutes (300s docker timeout + 60s buffer)
