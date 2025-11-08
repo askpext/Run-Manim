@@ -59,14 +59,14 @@
                         {% csrf_token %}
                         <input type="hidden" name="form_type" value="save_current">
                         <input type="hidden" name="hidden_code_current" id="hidden_code_current">
-                        <button type="submit" id="save-btn">Save</button>
+                        <button type="submit" id="save-btn" title='(Ctrl+s) Save your "precious" project'>Save</button>
                     </form>
                     
                     <!-- New button -->
-                    <button type="button" id="new-btn">New</button>
-                                        
+                    <button type="button" id="new-btn" title="(Ctrl+Alt+n) Save as New">New</button>
+
                     <!-- Open Button -->
-                    <button id="open-button">Open</button>
+                    <button id="open-button" title="(Havent created a shortcut yet) Have more important issue going on (Ran out of coffee).">Open</button>
 
                     <!-- Open list -->
                     <div id="open-list" class="dropdown-list" style="display: none;">
@@ -98,10 +98,10 @@
                 <!-- right side -->
                 <div>
                     <!-- Run button -->
-                    <input id="run-btn" type="submit" value="Run" onclick="ShowSpinner(); HidePlaceholder();" form="code-form">
+                    <input id="run-btn" type="submit" value="Run" onclick="ShowSpinner(); HidePlaceholder();" form="code-form" title="(Ctrl+r) Torture my potato server">
 
                     <!-- Theme toggle button -->
-                    <label class="theme-toggle">
+                    <label class="theme-toggle" title="Pretend you are a hacker OR stare into your computer like its your mom's phone at 1 am">
                         <input type="checkbox">
                         <span class="slider"></span>
                     </label>
