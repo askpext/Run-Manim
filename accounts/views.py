@@ -12,7 +12,7 @@ def login_view(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('home')  # Redirect to a home page or dashboard
+                return redirect('/')  
     else:
         form = LoginForm()
     return render(request, 'accounts/login.html', {'form': form})
@@ -25,11 +25,11 @@ def signup_view(request):
             user.set_password(form.cleaned_data['password'])
             user.save()
             login(request, user)
-            return redirect('home')  # Redirect to a home page or dashboard
+            return redirect('/')  
     else:
         form = SignupForm()
     return render(request, 'accounts/signup.html', {'form': form})
 
 def logout_view(request):
     logout(request)
-    return redirect('login')  # Redirect to login page after logging out
+    return redirect('/')  

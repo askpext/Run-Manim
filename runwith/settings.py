@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-bm5v%1eo(9ctdvd5!=anucw^8dn!^jd%zye%y_j%f@lz$b^_*j
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['runwith.cloud', 'www.runwith.cloud', 'manim.runwith.cloud']
 
 
 # Application definition
@@ -185,6 +185,6 @@ CSRF_TRUSTED_ORIGINS = ["https://runwith.cloud", "https://www.runwith.cloud", "h
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
-#so that login in app app ensures login in all apps
+#so that login in any app ensures login in all apps
 SESSION_COOKIE_DOMAIN = ".runwith.cloud"
 CSRF_COOKIE_DOMAIN = ".runwith.cloud"
