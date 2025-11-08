@@ -63,7 +63,7 @@
                     </form>
                     
                     <!-- New button -->
-                    <button type="button" id="save-new-btn">New</button>
+                    <button type="button" id="new-btn">New</button>
                                         
                     <!-- Open Button -->
                     <button id="open-button">Open</button>
@@ -98,7 +98,7 @@
                 <!-- right side -->
                 <div>
                     <!-- Run button -->
-                    <input type="submit" value="Run" onclick="ShowSpinner(); HidePlaceholder();" form="code-form">
+                    <input id="run-btn" type="submit" value="Run" onclick="ShowSpinner(); HidePlaceholder();" form="code-form">
 
                     <!-- Theme toggle button -->
                     <label class="theme-toggle">
@@ -315,6 +315,70 @@
 <script src="{% static 'js/manim/opencode.js' %}"></script>
 
 <script src="{% static 'js/manim.js' %}"></script>
+
+<script>
+
+// shortcuts 
+// mod = Ctrl on Win/Linux, Cmd on Mac
+const shortcuts = [
+  {
+    key: "s",
+    mod: true,       
+    shift: false,
+    alt: false,
+    action: () => document.getElementById("save-btn").click()
+  },
+  {
+    key: "n",
+    mod: true,      
+    shift: false,
+    alt: true,
+    action: () => document.getElementById("new-btn").click()
+  },
+  {
+    key: "r",
+    mod: true,
+    shift: false,
+    alt: false,
+    action: () => document.getElementById("run-btn").click()
+  }
+];
+
+// Main listener
+document.addEventListener("keydown", (e) => {
+  for (const s of shortcuts) {
+    const keyMatch = e.key.toLowerCase() === s.key.toLowerCase();
+    const modMatch = s.mod ? (e.ctrlKey || e.metaKey) : (!e.ctrlKey && !e.metaKey);
+    const shiftMatch = s.shift ? e.shiftKey : !e.shiftKey;
+    const altMatch = s.alt ? e.altKey : !e.altKey;
+
+    if (keyMatch && modMatch && shiftMatch && altMatch) {
+      e.preventDefault();   // prevent browser default only for this shortcut
+      s.action();
+      break;                // stop after first match
+    }
+  }
+});
+
+
+
+// document.addEventListener("keydown", function(e) {
+//   if (e.ctrlKey && e.key === "s") {
+//     e.preventDefault();
+//     document.getElementById("save-btn").click();
+//   }
+
+//   if (e.ctrlKey && e.key === "r") {
+//     e.preventDefault();
+//     document.getElementById("run-btn").click();
+//   }
+
+//   if (e.ctrlKey && e.key === "n") {
+//     e.preventDefault();
+//     document.getElementById("new-btn").click();
+//   }
+// });
+</script>
 
 {% endblock %}
  

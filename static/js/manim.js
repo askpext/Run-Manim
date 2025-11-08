@@ -30,7 +30,7 @@ var editor = CodeMirror.fromTextArea(document.getElementById('code'), {
         var modal = document.getElementById("save-modal");
     
         // Get the button that opens the modal
-        var savenewBtn = document.getElementById("save-new-btn");
+        var savenewBtn = document.getElementById("new-btn");
     
         // Get the <span> element that closes the modal
         var span = document.getElementsByClassName("close")[0];
@@ -51,7 +51,7 @@ var editor = CodeMirror.fromTextArea(document.getElementById('code'), {
                 modal.style.display = "block";                         
             }
             else{
-                alert("You have to Log in to do that");
+                alert("Dude, You have to Log in to save as new");
             }
         }
     
@@ -185,7 +185,7 @@ var editor = CodeMirror.fromTextArea(document.getElementById('code'), {
             event.preventDefault();
 
             if (!isAuthenticated) {
-                alert("You have to log in to do that");
+                alert("You have to log in to save, dummy!");
                 return;
             }
 
