@@ -5,6 +5,11 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['runwith.cloud', 'www.runwith.cloud', 'manim.runwith.cloud']
 
+#I entered this for media
+MEDIA_URL = 'https://runwith.cloud/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
 
 # CSRF and Cookie Security Settings
 CSRF_TRUSTED_ORIGINS = ["https://runwith.cloud", "https://www.runwith.cloud", "https://manim.runwith.cloud"]

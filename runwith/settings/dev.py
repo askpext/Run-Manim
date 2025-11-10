@@ -4,3 +4,7 @@ from .base import *
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+
+#I entered this for media
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

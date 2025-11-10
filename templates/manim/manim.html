@@ -140,31 +140,29 @@
                 <div class="error-message">{{ result_message }}</div>
             {% endif %}
 
-            {%if no_cluster %}
+            <!-- {%if no_cluster %}
                 <script>
                     document.getElementById('spinner').style.display = 'none';
                 </script>
-            {% endif %}
+            {% endif %} -->
 
             <script>
                 let stopChecking = false;
             </script>
 
-            {% if not cluster_error %}
-            <div id="spinner" class="spinner"></div>
-            {% endif %}
+            
 
             {% if placeholder %}
                 <img src="{% static 'img/placeholder.png' %}" alt="Image" id="placeholder">
             {% elif "self.play" in previous_code or "self.wait" in previous_code %}
-                <video id="result-video" controls >
+                <video id="result-video" controls  style="display: none;">
                     <source src="" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
-                <a id="download-video" href="" class="download-btn" download>Download</a>
+                <a id="download-video" href="" class="download-btn" style="display:none" download>Download</a>
                 <p id="loading-message-video" style="display: none;" >Generating video...</p>
                 
-
+<!-- 
 
                 <script>
                     const videoUrl = "{{ MEDIA_URL }}{{ media_name }}.mp4";
@@ -201,13 +199,13 @@
                     }
 
                     checkVideo();
-                </script>
+                </script> -->
             {% elif "self.add" in previous_code %}
-                <img id="result-image" src="" alt="Image">
-                <a id="download-image" href="" class="download-btn" download>Download</a>
+                <img id="result-image" src="" alt="Image" style="display: none;">
+                <a id="download-image" href="" class="download-btn" style="display: none;" download>Download</a>
                 <p id="loading-message" style="display: none;">Generating image...</p>
 
-                <script>
+                <!-- <script>
                     const imageUrl = "{{ MEDIA_URL }}{{ media_name }}.png";
                     const imageElement = document.getElementById('result-image');
                     const loadingMessage = document.getElementById('loading-message');
@@ -241,20 +239,23 @@
                     }
 
                     checkImage();
-                </script>
+                </script> -->
             {% else %}
                 <p>No output available</p>
             {% endif %}
 
 
             {% if task_id %}
+                <div id="spinner" class="spinner"></div>
                 <div id="statusBox">Starting Up...</div>
                 <script>
                     const taskStatusUrlTemplate = "{% url 'task-status' 'TASK_ID_PLACEHOLDER' %}";
-                    const taskId = "{{ task_id }}"; 
+                    const taskId = "{{ task_id }}";
                     const startTime = Date.now();
                     const maxPollingTime = 360000; // 6 minutes (300s docker timeout + 60s buffer)
-                    
+                    const spinner = document.getElementById('spinner');
+
+                    spinner.style.display = 'block';
 
                     function pollStatus(id) {
                         // Check if polling has timed out
@@ -262,7 +263,7 @@
                             document.getElementById('statusBox').textContent = '❌ Error: Task timed out. The server may be busy.';
                             spinner.style.display = 'none';
                             console.log(Date.now() - startTime);
-                            stopChecking = true
+                            stopChecking = true;
                             return;
                         }
 
@@ -273,27 +274,104 @@
                             .then(data => {
                                 console.log('data received:', data);
                                 const statusBox = document.getElementById('statusBox');
+
                                 if (data.status === 'queued') {
                                     statusBox.textContent = 'You are Queued...';
                                 } else if (data.status === 'processing') {
                                     statusBox.textContent = 'processing...';
                                 } else if (data.status === 'done') {
-                                    statusBox.textContent = '';
-                                    stopChecking = true
+                                    // Backend says done — now verify the media actually exists before stopping
+                                    statusBox.textContent = 'Finalizing...';
+
+                                    // Detect whether this page is for video or image by checking existence of functions/elements
+                                    const isVideo = !!document.getElementById('result-video');
+                                    const isImage = !!document.getElementById('result-image');
+
+                                    // Construct media base URL from template variables already present in the page
+                                    const mediaBase = "{{ MEDIA_URL }}{{ media_name }}";
+                                    const mediaUrl = isVideo ? (mediaBase + ".mp4") : (mediaBase + ".png");
+
+                                    // Final-check loop: try HEAD with cache-busting until success or timeout
+                                    let attempts = 0;
+                                    const maxAttempts = 8;   // try for ~8 seconds (adjust if needed)
+                                    const tryInterval = 1000;
+
+                                    function tryFinalCheck() {
+                                        attempts++;
+                                        const urlWithBust = mediaUrl + (mediaUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
+                                        fetch(urlWithBust, { method: 'HEAD', cache: 'no-store' })
+                                            .then(r => {
+                                                if (r.ok) {
+                                                    // media reachable — show it and tidy UI
+                                                    if (isVideo) {
+                                                        const videoElement = document.getElementById('result-video');
+                                                        const videoSource = videoElement.getElementsByTagName('source')[0];
+                                                        videoSource.src = urlWithBust;
+                                                        videoElement.load();
+                                                        videoElement.style.display = 'block';
+                                                        const downloadVideo = document.getElementById('download-video');
+                                                        if (downloadVideo) {
+                                                            downloadVideo.href = mediaUrl;
+                                                            downloadVideo.style.display = 'block';
+                                                        }
+                                                    } else if (isImage) {
+                                                        const imageElement = document.getElementById('result-image');
+                                                        imageElement.src = urlWithBust;
+                                                        imageElement.style.display = 'block';
+                                                        const downloadImage = document.getElementById('download-image');
+                                                        if (downloadImage) {
+                                                            downloadImage.href = mediaUrl;
+                                                            downloadImage.style.display = 'block';
+                                                        }
+                                                    }
+
+                                                    spinner.style.display = 'none';
+                                                    statusBox.textContent = ''; // clear finalizing text
+                                                    stopChecking = true;
+                                                    return;
+                                                } else {
+                                                    if (attempts < maxAttempts) {
+                                                        setTimeout(tryFinalCheck, tryInterval);
+                                                    } else {
+                                                        statusBox.textContent = '❌ Error: media not found after finalizing.';
+                                                        spinner.style.display = 'none';
+                                                        stopChecking = true;
+                                                    }
+                                                }
+                                            })
+                                            .catch(() => {
+                                                if (attempts < maxAttempts) {
+                                                    setTimeout(tryFinalCheck, tryInterval);
+                                                } else {
+                                                    statusBox.textContent = '❌ Error: network problem while checking media.';
+                                                    spinner.style.display = 'none';
+                                                    stopChecking = true;
+                                                }
+                                            });
+                                    }
+
+                                    // Start final-check attempts (do not call pollStatus again here)
+                                    tryFinalCheck();
                                     return;
                                 } else if (data.status === 'failed') {
                                     statusBox.textContent = '❌ Task failed.';
                                     spinner.style.display = 'none';
-                                    stopChecking = true
+                                    stopChecking = true;
                                     return;
                                 }
+
+                                // continue polling normally
                                 setTimeout(() => pollStatus(id), 2000);
                             })
                             .catch(() => {
                                 document.getElementById('statusBox').textContent = 'status unknown';
+                                // keep polling in case transient error
+                                setTimeout(() => pollStatus(id), 2000);
                             });
                     }
+
                     pollStatus(taskId);
+
                 </script>
             {% endif %}
         </div>

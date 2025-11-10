@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Orbitron', sans-serif;
     margin: 0;
     padding: 0;
     background-color: #f0f0f0;
@@ -8,6 +8,16 @@ body {
     flex-direction: column;
     min-height: 100vh;
     box-sizing: border-box;
+}
+
+.fas {
+    letter-spacing: 2px;
+}
+
+sup {
+    font-size: 0.6em;
+    margin-left: 2px;
+    opacity: 0.7;
 }
 
 nav {
