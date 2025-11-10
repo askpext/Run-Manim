@@ -41,8 +41,8 @@ def run_manim_command(image_name, base_dir, media_name, code_filename):
     docker_command = f"manim -ql /mnt/code/{code_filename} -o /mnt/output/{media_name}"
 
     # Resource limits
-    mem_limit = "512m"     # 512MB memory out of 1 gb
-    cpus = 0.8             # max 0.8 of 1 vCPU
+    mem_limit = "500m"     # 500MB memory out of 1 gb
+    cpus = 0.8             # max 0.8 of 2 vCPU
     pids_limit = 64        # max processes
 
     # Timeout in seconds for long-running jobs

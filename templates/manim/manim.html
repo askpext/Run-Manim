@@ -299,6 +299,37 @@
         </div>
     </div>
 
+<!-- Display message -->
+ <!-- Add this inside <body> -->
+<div class="site-overlay-message" role="status" aria-live="polite">
+  sorry, this service is not available right now. But I am working on it. Please check back later!
+</div>
+
+<!-- Add this to your stylesheet (or inside a <style> tag) -->
+<style>
+  .site-overlay-message{
+    position: absolute;            /* user requested absolute */
+    left: 50%;                     /* horizontally center reference point */
+    bottom: 10px;                     /* vertically at bottom of page */
+    transform: translateX(-50%);   /* center the element itself */
+    background: rgba(0,0,0,0.6);   /* semi-transparent black */
+    color: #ffffff;                /* white text */
+    padding: 14px 18px;
+    font-size: 16px;
+    line-height: 1;
+    border-radius: 6px 6px 0 0;    /* optional rounded top corners */
+    z-index: 9999;                 /* sit on top of other content */
+    text-align: center;
+    max-width: 90%;                /* keeps it from overflowing on small screens */
+    box-sizing: border-box;
+    pointer-events: none;          /* lets clicks pass through unless you change it */
+  }
+
+  /* If you want it readable on very small screens, reduce font-size */
+  @media (max-width:420px){
+    .site-overlay-message{ font-size:14px; padding:10px 12px; }
+  }
+</style>
 
   
 {% endblock %}
