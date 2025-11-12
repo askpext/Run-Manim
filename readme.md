@@ -54,14 +54,14 @@
     
     - [Other systems](https://docs.docker.com/engine/install/)
 
-   **Allow docker client to talk to docker**
+   Allow docker client to talk to docker
 
      ```
      sudo usermod -aG docker $USER
      newgrp docker
      ```
 
-    **Give permission for docker to write to media**
+    Give permission for docker to write to media
 
      ```
      sudo chown -R 1000:1000 media
@@ -75,20 +75,38 @@
      >```
 
     
-5. **Run Migrations and collecstatic:**
+4. **Run Migrations and collecstatic:**
 
     ```
     python manage.py migrate
     ```
 
     ```
-    python manage.py collectstatic 
+    python manage.py collectstatic --noinput
     ```
 
     Or just set Debug = True, no need for collecstatic
-    
-6. **Start the Development Server:**
 
+2. **Setup environment**
+    ```
+    export DJANGO_ENV=dev # or prod
+    export DJANGO_SECRET_KEY='your_secret_key'
+    ```
+    
+5. **Start the Development Server:**
+
+    schedule ping_cluster 
+
+    (to detect if qcluster is running)
+
+    ```
+    python manage.py create_heartbeat
+    ```
+    start qcluster
+    ```
+    python manage.py qcluster
+    ```
+    start server
     ```
     python manage.py runserver
     ```
