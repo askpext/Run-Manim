@@ -98,10 +98,10 @@
                 <!-- right side -->
                 <div>
                     <!-- Run button -->
-                    <input id="run-btn" type="submit" value="Run" onclick="ShowSpinner(); HidePlaceholder();" form="code-form" title="(Ctrl+r) Torture my potato server">
+                    <input id="run-btn" type="submit" value="Run" onclick="ShowSpinner(); HidePlaceholder();" form="code-form" title="(Shift+Enter) Torture my potato server">
 
                     <!-- Theme toggle button -->
-                    <label class="theme-toggle" title="Pretend you are a hacker OR stare into your computer like its your mom's phone at 1 am">
+                    <label style="display: none;" class="theme-toggle" title="Pretend you are a hacker OR stare into your computer like its your mom's phone at 1 am">
                         <input type="checkbox">
                         <span class="slider"></span>
                     </label>
@@ -443,9 +443,9 @@ const shortcuts = [
     action: () => document.getElementById("new-btn").click()
   },
   {
-    key: "r",
-    mod: true,
-    shift: false,
+    key: "Enter",
+    mod: false,
+    shift: true,
     alt: false,
     action: () => document.getElementById("run-btn").click()
   }
