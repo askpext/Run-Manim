@@ -3,7 +3,7 @@ var editor = CodeMirror.fromTextArea(document.getElementById('code'), {
             lineNumbers: true,
             tabSize: 4,
             // value: 'from manim import*',
-            theme: 'dracula',
+            theme: 'monokai',
             extraKeys: {
             "Ctrl-Space": "autocomplete"  // Bind autocomplete to Ctrl-Space
             }
@@ -14,15 +14,15 @@ var editor = CodeMirror.fromTextArea(document.getElementById('code'), {
    
 
 
-    var toggle_button = document.getElementsByClassName('theme-toggle')[0];
-    toggle_button.addEventListener('change', function() {
-    var Box = toggle_button.getElementsByTagName('input')[0];    
-    if (Box.checked) {
-        editor.setOption("theme", "eclipse");  // Dark mode
-    } else {
-        editor.setOption("theme", "dracula");  // Light mode
-    }
-    });
+    // var toggle_button = document.getElementsByClassName('theme-toggle')[0];
+    // toggle_button.addEventListener('change', function() {
+    // var Box = toggle_button.getElementsByTagName('input')[0];    
+    // if (Box.checked) {
+    //     editor.setOption("theme", "eclipse");  // Dark mode
+    // } else {
+    //     editor.setOption("theme", "dracula");  // Light mode
+    // }
+    // });
 
     
     

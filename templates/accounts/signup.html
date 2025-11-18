@@ -1,72 +1,141 @@
-
 {% extends 'base.html' %}
 
 {% block title %}Signup{% endblock %}
 
 {% block extra_head %}
 <style>
+    /* VS Code Dark+ palette */
+    :root {
+        --bg: #1e1e1e;
+        --panel: #252526;
+        --muted-panel: #2d2d2d;
+        --text: #d4d4d4;
+        --subtext: #cccccc;
+        --input-bg: #1f1f1f;
+        --input-border: #3c3c3c;
+        --accent: #0e639c;
+        --accent-hover: #1177bb;
+        --focus: #094771;
+        --shadow: rgba(0, 0, 0, 0.6);
+    }
+
+    html,
     body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
+        height: 100%;
+        margin: 0;
+        background: var(--bg);
+        font-family: "Fira Code", "Source Code Pro", ui-monospace, monospace;
+        color: var(--text);
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh;
-        margin: 0;
     }
+
     .container {
-        background: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        max-width: 400px;
-        width: 100%;
+        min-width: 320px;
+        max-width: 420px;
+        width: 90%;
+        background: linear-gradient(180deg, var(--panel), var(--muted-panel));
+        border: 1px solid #00000055;
+        box-shadow: 0 8px 30px var(--shadow);
+        padding: 20px 22px;
+        border-radius: 6px;
     }
+
     h2 {
-        margin-top: 0;
-        color: #333;
+        margin: 0 0 14px 0;
+        font-size: 18px;
+        color: var(--text);
+        font-weight: 600;
+        letter-spacing: 0.2px;
     }
+
     form {
         display: flex;
         flex-direction: column;
+        gap: 12px;
     }
-    .form-group {
-        margin-bottom: 15px;
+
+    form p {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
     }
+
     label {
-        margin-bottom: 5px;
-        color: #555;
+        color: var(--subtext);
+        font-size: 13px;
     }
-    input {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ddd;
+
+    input[type="text"],
+    input[type="password"],
+    input[type="email"] {
+        background: var(--input-bg);
+        color: var(--text);
+        border: 1px solid var(--input-border);
+        padding: 10px 12px;
         border-radius: 4px;
-        box-sizing: border-box;
+        font-family: inherit;
+        font-size: 14px;
+        transition: box-shadow .12s ease, border-color .12s ease;
+        outline: none;
     }
-    button {
-        background-color: #007BFF;
-        color: white;
-        border: none;
-        padding: 10px;
-        border-radius: 4px;
+
+    input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(14, 99, 156, 0.12);
+    }
+
+    button[type="submit"] {
+        background: var(--accent);
+        color: #fff;
+        border: 1px solid var(--accent);
+        padding: 8px 12px;
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: 3px;
         cursor: pointer;
-        font-size: 16px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
     }
-    button:hover {
-        background-color: #0056b3;
+
+    button[type="submit"]:hover {
+        background: var(--accent-hover);
+        border-color: var(--accent-hover);
+    }
+
+    button[type="submit"]:active {
+        background: var(--focus);
+        border-color: var(--focus);
+    }
+
+    .helptext,
+    .errorlist {
+        color: #f44747;
+        font-size: 13px;
+        margin-top: 6px;
+    }
+
+    @media (max-width:420px) {
+        .container {
+            margin: 0 12px;
+            padding: 16px;
+        }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <h2>Signup</h2>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
+<div class="container" role="main" aria-labelledby="signup-heading">
+    <h2 id="signup-heading">Signup</h2>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div style="display:flex; justify-content:flex-end; margin-top:6px;">
             <button type="submit">Signup</button>
-        </form>
-    </div>
+        </div>
+    </form>
+</div>
 {% endblock %}
-

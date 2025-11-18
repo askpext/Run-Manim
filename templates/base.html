@@ -142,6 +142,7 @@
             // Click outside menu to hide it
             document.addEventListener('click', (e) => {
                 if (!menu.contains(e.target) && !hamburger.contains(e.target)) {
+                    console.log('Clicked outside menu');
                     menu.style.display = 'none';
                 }
             });

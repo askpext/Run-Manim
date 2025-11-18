@@ -1,75 +1,171 @@
- 
-    
-
-
 {% extends 'base.html' %}
 
 {% block title %}Login{% endblock %}
 
 {% block extra_head %}
 <style>
+    /* VS Code Dark+ palette */
+    :root {
+        --bg: #1e1e1e;
+        --panel: #252526;
+        --muted-panel: #2d2d2d;
+        --text: #d4d4d4;
+        --subtext: #cccccc;
+        --input-bg: #1f1f1f;
+        --input-border: #3c3c3c;
+        --accent: #0e639c;
+        /* primary action color */
+        --accent-hover: #1177bb;
+        --focus: #094771;
+        --shadow: rgba(0, 0, 0, 0.6);
+    }
+
+    html,
     body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
+        height: 100%;
         margin: 0;
+        background: var(--bg);
+        font-family: "Fira Code", "Source Code Pro", ui-monospace, SFMono-Regular, Menlo, monospace;
+        color: var(--text);
     }
+
+    /* center the panel */
     .container {
-        background: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        max-width: 400px;
-        width: 100%;
+        min-width: 320px;
+        max-width: 420px;
+        width: 90%;
+        margin: 6vh auto;
+        background: linear-gradient(180deg, var(--panel), var(--muted-panel));
+        border: 1px solid #00000055;
+        box-shadow: 0 8px 30px var(--shadow);
+        padding: 20px 22px;
+        border-radius: 6px;
     }
+
     h2 {
-        margin-top: 0;
-        color: #333;
+        margin: 0 0 14px 0;
+        font-size: 18px;
+        color: var(--text);
+        font-weight: 600;
+        letter-spacing: 0.2px;
     }
+
     form {
         display: flex;
         flex-direction: column;
+        gap: 12px;
     }
-    .form-group {
-        margin-bottom: 15px;
+
+    /* Django's form.as_p renders <p> with label+input; style them */
+    form p {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
     }
+
     label {
-        margin-bottom: 5px;
-        color: #555;
+        color: var(--subtext);
+        font-size: 13px;
+        margin-bottom: 0;
     }
-    input {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ddd;
+
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    textarea {
+        background: var(--input-bg);
+        color: var(--text);
+        border: 1px solid var(--input-border);
+        padding: 10px 12px;
         border-radius: 4px;
-        box-sizing: border-box;
+        font-family: inherit;
+        font-size: 14px;
+        transition: box-shadow .12s ease, border-color .12s ease;
+        outline: none;
     }
-    button {
-        background-color: #007BFF;
-        color: white;
-        border: none;
-        padding: 10px;
-        border-radius: 4px;
+
+    input::placeholder,
+    textarea::placeholder {
+        color: #9e9e9e;
+    }
+
+    input:focus,
+    textarea:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(14, 99, 156, 0.12);
+    }
+
+    /* submit button consistent with editor actions */
+    button[type="submit"],
+    .btn {
+        background: var(--accent);
+        color: #fff;
+        border: 1px solid var(--accent);
+        padding: 8px 12px;
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: 3px;
         cursor: pointer;
-        font-size: 16px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
     }
-    button:hover {
-        background-color: #0056b3;
+
+    button[type="submit"]:hover {
+        background: var(--accent-hover);
+        border-color: var(--accent-hover);
     }
-</style>    
+
+    button[type="submit"]:active {
+        background: var(--focus);
+        border-color: var(--focus);
+    }
+
+    /* help / error text */
+    .helptext,
+    .errorlist {
+        color: #f44747;
+        font-size: 13px;
+        margin-top: 6px;
+    }
+
+    /* responsive tweak */
+    @media (max-width:420px) {
+        .container {
+            margin: 4vh 12px;
+            padding: 16px;
+        }
+    }
+</style>
+
+<style>
+    html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--bg);
+}
+
+.container {
+    margin: 0;              /* kill leftover margins */
+    position: relative;     /* don’t let it wander */
+}
+
+</style>
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <h2>Login</h2>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
+<div class="container" role="main" aria-labelledby="login-heading">
+    <h2 id="login-heading">Login</h2>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div style="display:flex; justify-content:flex-end; margin-top:6px;">
             <button type="submit">Login</button>
-        </form>
-    </div>
+        </div>
+    </form>
+</div>
 {% endblock %}
-
