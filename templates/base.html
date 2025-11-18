@@ -57,7 +57,7 @@
         
         <div class="nav-right">
             {% if user.is_authenticated %}
-                <p>Welcome, {{ user.username }}!</p>
+                <p>{{ user.username }}</p>
             {% endif %}
             <div class="menu">
                 <a href="https://ko-fi.com/abhinavbabu" title="Sorry, but I am broke.">Donate</a>

@@ -24,9 +24,9 @@
     /* min-width: 350px; moved to desktop specific */
     max-width:1000px;
     background-color: #f0f0f0;
- }
- 
- 
+}
+
+
 .modal{
     display: none;
 }
@@ -80,9 +80,10 @@ textarea {
     color: #fff; /* White text color */
     border: none;
     padding: 10px 20px;
-    margin-top: 3px;
+    margin-top: 0;
     cursor: pointer;
     border-radius: 5px;
+    height: 100%;
 }
 #run-btn:hover {
     background-color: #3a6380; /* Darker shade of blue */
@@ -153,6 +154,7 @@ display: none; /* Initially hidden */
     color: #333;
     /* Darker text color */
     background-color: #e7e7e7;
+    /* background-color: #6e8efb; */
     /* Light grey background */
     border: 1px solid #ccc;
     /* Light border for a subtle look */
