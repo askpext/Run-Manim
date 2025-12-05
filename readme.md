@@ -4,7 +4,9 @@
 
 <!-- <img src="https://github.com/user-attachments/assets/6c703603-9cfc-483b-9f83-efb3fe6d9253" alt="screenshot" width="800" /> -->
 
- ![manim_runwith](https://github.com/user-attachments/assets/b7d08c2e-db6f-4c07-beff-ac4c6b70f863)
+<!-- ![manim_runwith](https://github.com/user-attachments/assets/b7d08c2e-db6f-4c07-beff-ac4c6b70f863) -->
+
+<img width="1920" height="992" alt="Manim_Screenshot_cropped" src="https://github.com/user-attachments/assets/b96a1cc5-5c44-4e15-babf-34b76c1d225d" />
 
 
 ## Key Features
@@ -110,6 +112,7 @@
     ```
     python manage.py runserver
     ```
+
 
 
 
