@@ -5,164 +5,178 @@
 
 {% block extra_head %}
 
-    <!--  meta tags for link preview appearance -->
-    <meta property="og:title" content="Manim Runwith (Formerly CloudPy)">
-    <meta property="og:description" content="Run manim on the cloud">
-    <meta property="og:image" content="https://raw.githubusercontent.com/thesophile/cloudpy-public-media/main/icon-2_transparent.png">
-    <meta property="og:url" content="https://manim.runwith.cloud">
+<!--  meta tags for link preview appearance -->
+<meta property="og:title" content="Manim Runwith (Formerly CloudPy)">
+<meta property="og:description" content="Run manim on the cloud">
+<meta property="og:image"
+    content="https://raw.githubusercontent.com/thesophile/cloudpy-public-media/main/icon-2_transparent.png">
+<meta property="og:url" content="https://manim.runwith.cloud">
 
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <link rel="stylesheet" href="{% static 'css/theme-button.css' %}">
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<link rel="stylesheet" href="{% static 'css/theme-button.css' %}">
 
-   <!--CodeMirror for syntax highlighting--> 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.8/codemirror.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.8/codemirror.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.8/mode/python/python.min.js"></script>
+<!--CodeMirror for syntax highlighting-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.8/codemirror.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.8/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.8/mode/python/python.min.js"></script>
 
-  <!-- Import themes -->
-    <!-- Ecilpse  --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.7/theme/eclipse.min.css">
-    <!-- Dracula --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.7/theme/dracula.min.css">
-    <!-- Monokai --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/theme/monokai.min.css">
-    
-  
-
-  <!-- auto-complete -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.7/addon/hint/show-hint.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.7/addon/hint/show-hint.min.js"></script>
-    
+<!-- Import themes -->
+<!-- Ecilpse  -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.7/theme/eclipse.min.css">
+<!-- Dracula -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.7/theme/dracula.min.css">
+<!-- Monokai -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/theme/monokai.min.css">
 
 
 
-    <script>
-        function ShowSpinner() {
-            var spinner = document.getElementById('spinner');
-            spinner.style.display = 'block';
-        }
-        function HidePlaceholder() {
-            var placeholder = document.getElementById('placeholder');
-            placeholder.style.display = 'none';
-        }
-    </script>
-    
-    <link rel="stylesheet" href="{% static 'css/manim.css' %}">
-    
+<!-- auto-complete -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.7/addon/hint/show-hint.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.7/addon/hint/show-hint.min.js"></script>
+
+
+
+
+<script>
+    function ShowSpinner() {
+        var spinner = document.getElementById('spinner');
+        spinner.style.display = 'block';
+    }
+    function HidePlaceholder() {
+        var placeholder = document.getElementById('placeholder');
+        placeholder.style.display = 'none';
+    }
+</script>
+
+<link rel="stylesheet" href="{% static 'css/manim.css' %}">
+
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <div class="code-section">
-            <div class="top-row-buttons">
-                <!-- left side -->
-                <div>
-                    <!-- save button -->
-                    <form action="{% url 'save_current_code' %}" method="post" id="save-current-form">
-                        {% csrf_token %}
-                        <input type="hidden" name="form_type" value="save_current">
-                        <input type="hidden" name="hidden_code_current" id="hidden_code_current">
-                        <button type="submit" id="save-btn" title='(Ctrl+s) Save your "precious" project'>Save</button>
-                    </form>
-                    
-                    <!-- New button -->
-                    <button type="button" id="new-btn" title="(Ctrl+Alt+n) Save as New">New</button>
+<div class="container">
+    <div class="code-section">
+        <div class="top-row-buttons">
+            <!-- left side -->
+            <div>
+                <!-- save button -->
+                <form action="{% url 'save_current_code' %}" method="post" id="save-current-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_type" value="save_current">
+                    <input type="hidden" name="hidden_code_current" id="hidden_code_current">
+                    <button type="submit" id="save-btn" title='(Ctrl+s) Save your "precious" project'>Save</button>
+                </form>
 
-                    <!-- Open Button -->
-                    <button id="open-button" title="(Havent created a shortcut yet) Have more important issue going on (Ran out of coffee).">Open...</button>
+                <!-- New button -->
+                <button type="button" id="new-btn" title="(Ctrl+Alt+n) Save as New">New</button>
 
-                    <!-- Open list -->
-                    <div id="open-list" class="dropdown-list" style="display: none;">
-                        {% for code in saved_codes %}
-                        <div class="dropdown-item" data-id="{{ code.id }}">{{ code.name }}</div>
-                        {% endfor %}
-                    </div>
+                <!-- Open Button -->
+                <button id="open-button"
+                    title="(Havent created a shortcut yet) Have more important issue going on (Ran out of coffee).">Open...</button>
 
-                    
-                    <!-- Examples button -->
-                    <button id="examples-button">Examples...</button>
-
-                    <!-- Example list -->
-                    <div id="examples-list" class="dropdown-list" style="display: none;">
-                        <div class="dropdown-item" data-name="BraceAnnotation">BraceAnnotation</div>
-                        <div class="dropdown-item" data-name="VectorArrow">VectorArrow</div>
-                        <div class="dropdown-item" data-name="GradientImageFromArray">GradientImageFromArray</div>
-                        <div class="dropdown-item" data-name="BooleanOperations">BooleanOperations</div>
-                        <div class="dropdown-item" data-name="PointMovingOnShapes">PointMovingOnShapes</div>
-                        <div class="dropdown-item" data-name="MovingAround">MovingAround</div>
-                        <div class="dropdown-item" data-name="MovingAngle">MovingAngle</div>
-                        <div class="dropdown-item" data-name="MovingDots">MovingDots</div>
-                        <div class="dropdown-item" data-name="MovingGroupToDestination">MovingGroupToDestination</div>
-                    </div>
-
-                    
+                <!-- Open list -->
+                <div id="open-list" class="dropdown-list" style="display: none;">
+                    {% for code in saved_codes %}
+                    <div class="dropdown-item" data-id="{{ code.id }}">{{ code.name }}</div>
+                    {% endfor %}
                 </div>
 
-                <!-- right side -->
-                <div>
-                    <!-- Run button -->
-                    <button id="run-btn" type="submit" value="Run" onclick="ShowSpinner(); HidePlaceholder();" form="code-form" title="(Shift+Enter) Torture my potato server">
-                    <i class="fas fa-play"></i><i class="fas">RUN</i></button>
-                    <!-- Theme toggle button -->
-                    <label style="display: none;" class="theme-toggle" title="Pretend you are a hacker OR stare into your computer like its your mom's phone at 1 am">
-                        <input type="checkbox">
-                        <span class="slider"></span>
-                    </label>
+
+                <!-- Examples button -->
+                <button id="examples-button">Examples...</button>
+
+                <!-- Example list -->
+                <div id="examples-list" class="dropdown-list" style="display: none;">
+                    <div class="dropdown-item" data-name="BraceAnnotation">BraceAnnotation</div>
+                    <div class="dropdown-item" data-name="VectorArrow">VectorArrow</div>
+                    <div class="dropdown-item" data-name="GradientImageFromArray">GradientImageFromArray</div>
+                    <div class="dropdown-item" data-name="BooleanOperations">BooleanOperations</div>
+                    <div class="dropdown-item" data-name="PointMovingOnShapes">PointMovingOnShapes</div>
+                    <div class="dropdown-item" data-name="MovingAround">MovingAround</div>
+                    <div class="dropdown-item" data-name="MovingAngle">MovingAngle</div>
+                    <div class="dropdown-item" data-name="MovingDots">MovingDots</div>
+                    <div class="dropdown-item" data-name="MovingGroupToDestination">MovingGroupToDestination</div>
                 </div>
-                
-                
+
+
             </div>
-            
-            <!-- Textarea for code input -->
-            <form method="post" id="code-form">
+
+            <!-- right side -->
+            <div>
+                <!-- Run button -->
+                <button id="run-btn" type="submit" value="Run" onclick="ShowSpinner(); HidePlaceholder();"
+                    form="code-form" title="(Shift+Enter) Torture my potato server">
+                    <i class="fas fa-play"></i><i class="fas">RUN</i></button>
+                <!-- Theme toggle button -->
+                <label style="display: none;" class="theme-toggle"
+                    title="Pretend you are a hacker OR stare into your computer like its your mom's phone at 1 am">
+                    <input type="checkbox">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+
+        </div>
+
+        <!-- Textarea for code input -->
+        <form method="post" id="code-form">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="execute">
+            <textarea name="code" id="code" rows="20" cols="50" autocomplete="off" autocorrect="off"
+                autocapitalize="off" spellcheck="false">{{ previous_code }}</textarea>
+        </form>
+    </div>
+
+    <!-- Modal for saving code-->
+    <div id="save-modal" class="modal">
+        <div class="modal-content">
+            <button class="close" aria-label="Close"></button>
+
+            <form action="{% url 'save_new_code' %}" method="post" id="save-new-form">
                 {% csrf_token %}
-                <input type="hidden" name="form_type" value="execute">
-                <textarea name="code" id="code" rows="20" cols="50" 
-                autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">{{ previous_code }}</textarea>
+                <input type="hidden" name="form_type" value="save">
+                <input type="hidden" name="hidden_code_new" id="hidden_code_new">
+
+                <label for="name">Project name</label>
+                <input type="text" id="name" name="name" placeholder="my-awesome-project" required>
+
+                <div class="actions">
+                    <button type="submit" class="primary">Save</button>
+                    <button type="button" class="secondary close">Cancel</button>
+                </div>
             </form>
         </div>
-        
-        <!-- Modal for saving code-->
-        <div id="save-modal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <form action="{% url 'save_new_code' %}" method="post" id="save-new-form">
-                    {% csrf_token %}
-                    <input type="hidden" name="form_type" value="save">
-                    <label for="name">Enter a name for the project:</label><br>
-                    <input type="text" id="name" name="name"><br>
-                    <input type="hidden" name="hidden_code_new" id="hidden_code_new">
-                    <button type="submit">Save</button>
-                </form>
-            </div>
-        </div>
+    </div>
 
 
-        <div class="media-section">
-            {% if result_message %}
-                <div class="error-message">{{ result_message }}</div>
-            {% endif %}
 
-            <!-- {%if no_cluster %}
+    <div class="media-section">
+        {% if result_message %}
+        <div class="error-message">{{ result_message }}</div>
+        {% endif %}
+
+        <!-- {%if no_cluster %}
                 <script>
                     document.getElementById('spinner').style.display = 'none';
                 </script>
             {% endif %} -->
 
-            <script>
-                let stopChecking = false;
-            </script>
+        <script>
+            let stopChecking = false;
+        </script>
 
-            
 
-            {% if placeholder %}
-                <img src="{% static 'img/placeholder.png' %}" alt="Image" id="placeholder">
-            {% elif "self.play" in previous_code or "self.wait" in previous_code %}
-                <video id="result-video" controls  style="display: none;">
-                    <source src="" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-                <a id="download-video" href="" class="download-btn" style="display:none" download>Download</a>
-                <p id="loading-message-video" style="display: none;" >Generating video...</p>
-                
-<!-- 
+
+        {% if placeholder %}
+        <img src="{% static 'img/placeholder.png' %}" alt="Image" id="placeholder">
+        {% elif "self.play" in previous_code or "self.wait" in previous_code %}
+        <video id="result-video" controls style="display: none;">
+            <source src="" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <a id="download-video" href="" class="download-btn" style="display:none" download>Download</a>
+        <p id="loading-message-video" style="display: none;">Generating video...</p>
+
+        <!-- 
 
                 <script>
                     const videoUrl = "{{ MEDIA_URL }}{{ media_name }}.mp4";
@@ -200,12 +214,12 @@
 
                     checkVideo();
                 </script> -->
-            {% elif "self.add" in previous_code %}
-                <img id="result-image" src="" alt="Image" style="display: none;">
-                <a id="download-image" href="" class="download-btn" style="display: none;" download>Download</a>
-                <p id="loading-message" style="display: none;">Generating image...</p>
+        {% elif "self.add" in previous_code %}
+        <img id="result-image" src="" alt="Image" style="display: none;">
+        <a id="download-image" href="" class="download-btn" style="display: none;" download>Download</a>
+        <p id="loading-message" style="display: none;">Generating image...</p>
 
-                <!-- <script>
+        <!-- <script>
                     const imageUrl = "{{ MEDIA_URL }}{{ media_name }}.png";
                     const imageElement = document.getElementById('result-image');
                     const loadingMessage = document.getElementById('loading-message');
@@ -240,142 +254,142 @@
 
                     checkImage();
                 </script> -->
-            {% else %}
-                <p>No output available</p>
-            {% endif %}
+        {% else %}
+        <p>No output available</p>
+        {% endif %}
 
 
-            {% if task_id %}
-                <div id="spinner" class="spinner"></div>
-                <div id="statusBox">Starting Up...</div>
-                <script>
-                    const taskStatusUrlTemplate = "{% url 'task-status' 'TASK_ID_PLACEHOLDER' %}";
-                    const taskId = "{{ task_id }}";
-                    const startTime = Date.now();
-                    const maxPollingTime = 360000; // 6 minutes (300s docker timeout + 60s buffer)
-                    const spinner = document.getElementById('spinner');
+        {% if task_id %}
+        <div id="spinner" class="spinner"></div>
+        <div id="statusBox">Starting Up...</div>
+        <script>
+            const taskStatusUrlTemplate = "{% url 'task-status' 'TASK_ID_PLACEHOLDER' %}";
+            const taskId = "{{ task_id }}";
+            const startTime = Date.now();
+            const maxPollingTime = 360000; // 6 minutes (300s docker timeout + 60s buffer)
+            const spinner = document.getElementById('spinner');
 
-                    spinner.style.display = 'block';
+            spinner.style.display = 'block';
 
-                    function pollStatus(id) {
-                        // Check if polling has timed out
-                        if (Date.now() - startTime > maxPollingTime) {
-                            document.getElementById('statusBox').textContent = '❌ Error: Task timed out. The server may be busy.';
+            function pollStatus(id) {
+                // Check if polling has timed out
+                if (Date.now() - startTime > maxPollingTime) {
+                    document.getElementById('statusBox').textContent = '❌ Error: Task timed out. The server may be busy.';
+                    spinner.style.display = 'none';
+                    console.log(Date.now() - startTime);
+                    stopChecking = true;
+                    return;
+                }
+
+                const url = taskStatusUrlTemplate.replace('TASK_ID_PLACEHOLDER', id);
+                console.log('polling status from:', url);
+                fetch(url)
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log('data received:', data);
+                        const statusBox = document.getElementById('statusBox');
+
+                        if (data.status === 'queued') {
+                            statusBox.textContent = 'You are Queued...';
+                        } else if (data.status === 'processing') {
+                            statusBox.textContent = 'processing...';
+                        } else if (data.status === 'done') {
+                            // Backend says done — now verify the media actually exists before stopping
+                            statusBox.textContent = 'Finalizing...';
+
+                            // Detect whether this page is for video or image by checking existence of functions/elements
+                            const isVideo = !!document.getElementById('result-video');
+                            const isImage = !!document.getElementById('result-image');
+
+                            // Construct media base URL from template variables already present in the page
+                            const mediaBase = "{{ MEDIA_URL }}{{ media_name }}";
+                            const mediaUrl = isVideo ? (mediaBase + ".mp4") : (mediaBase + ".png");
+
+                            // Final-check loop: try HEAD with cache-busting until success or timeout
+                            let attempts = 0;
+                            const maxAttempts = 8;   // try for ~8 seconds (adjust if needed)
+                            const tryInterval = 1000;
+
+                            function tryFinalCheck() {
+                                attempts++;
+                                const urlWithBust = mediaUrl + (mediaUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
+                                fetch(urlWithBust, { method: 'HEAD', cache: 'no-store' })
+                                    .then(r => {
+                                        if (r.ok) {
+                                            // media reachable — show it and tidy UI
+                                            if (isVideo) {
+                                                const videoElement = document.getElementById('result-video');
+                                                const videoSource = videoElement.getElementsByTagName('source')[0];
+                                                videoSource.src = urlWithBust;
+                                                videoElement.load();
+                                                videoElement.style.display = 'block';
+                                                const downloadVideo = document.getElementById('download-video');
+                                                if (downloadVideo) {
+                                                    downloadVideo.href = mediaUrl;
+                                                    downloadVideo.style.display = 'block';
+                                                }
+                                            } else if (isImage) {
+                                                const imageElement = document.getElementById('result-image');
+                                                imageElement.src = urlWithBust;
+                                                imageElement.style.display = 'block';
+                                                const downloadImage = document.getElementById('download-image');
+                                                if (downloadImage) {
+                                                    downloadImage.href = mediaUrl;
+                                                    downloadImage.style.display = 'block';
+                                                }
+                                            }
+
+                                            spinner.style.display = 'none';
+                                            statusBox.textContent = ''; // clear finalizing text
+                                            stopChecking = true;
+                                            return;
+                                        } else {
+                                            if (attempts < maxAttempts) {
+                                                setTimeout(tryFinalCheck, tryInterval);
+                                            } else {
+                                                statusBox.textContent = '❌ Error: media not found after finalizing.';
+                                                spinner.style.display = 'none';
+                                                stopChecking = true;
+                                            }
+                                        }
+                                    })
+                                    .catch(() => {
+                                        if (attempts < maxAttempts) {
+                                            setTimeout(tryFinalCheck, tryInterval);
+                                        } else {
+                                            statusBox.textContent = '❌ Error: network problem while checking media.';
+                                            spinner.style.display = 'none';
+                                            stopChecking = true;
+                                        }
+                                    });
+                            }
+
+                            // Start final-check attempts (do not call pollStatus again here)
+                            tryFinalCheck();
+                            return;
+                        } else if (data.status === 'failed') {
+                            statusBox.textContent = '❌ Task failed.';
                             spinner.style.display = 'none';
-                            console.log(Date.now() - startTime);
                             stopChecking = true;
                             return;
                         }
 
-                        const url = taskStatusUrlTemplate.replace('TASK_ID_PLACEHOLDER', id);
-                        console.log('polling status from:', url);
-                        fetch(url)
-                            .then(res => res.json())
-                            .then(data => {
-                                console.log('data received:', data);
-                                const statusBox = document.getElementById('statusBox');
+                        // continue polling normally
+                        setTimeout(() => pollStatus(id), 2000);
+                    })
+                    .catch(() => {
+                        document.getElementById('statusBox').textContent = 'status unknown';
+                        // keep polling in case transient error
+                        setTimeout(() => pollStatus(id), 2000);
+                    });
+            }
 
-                                if (data.status === 'queued') {
-                                    statusBox.textContent = 'You are Queued...';
-                                } else if (data.status === 'processing') {
-                                    statusBox.textContent = 'processing...';
-                                } else if (data.status === 'done') {
-                                    // Backend says done — now verify the media actually exists before stopping
-                                    statusBox.textContent = 'Finalizing...';
+            pollStatus(taskId);
 
-                                    // Detect whether this page is for video or image by checking existence of functions/elements
-                                    const isVideo = !!document.getElementById('result-video');
-                                    const isImage = !!document.getElementById('result-image');
-
-                                    // Construct media base URL from template variables already present in the page
-                                    const mediaBase = "{{ MEDIA_URL }}{{ media_name }}";
-                                    const mediaUrl = isVideo ? (mediaBase + ".mp4") : (mediaBase + ".png");
-
-                                    // Final-check loop: try HEAD with cache-busting until success or timeout
-                                    let attempts = 0;
-                                    const maxAttempts = 8;   // try for ~8 seconds (adjust if needed)
-                                    const tryInterval = 1000;
-
-                                    function tryFinalCheck() {
-                                        attempts++;
-                                        const urlWithBust = mediaUrl + (mediaUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
-                                        fetch(urlWithBust, { method: 'HEAD', cache: 'no-store' })
-                                            .then(r => {
-                                                if (r.ok) {
-                                                    // media reachable — show it and tidy UI
-                                                    if (isVideo) {
-                                                        const videoElement = document.getElementById('result-video');
-                                                        const videoSource = videoElement.getElementsByTagName('source')[0];
-                                                        videoSource.src = urlWithBust;
-                                                        videoElement.load();
-                                                        videoElement.style.display = 'block';
-                                                        const downloadVideo = document.getElementById('download-video');
-                                                        if (downloadVideo) {
-                                                            downloadVideo.href = mediaUrl;
-                                                            downloadVideo.style.display = 'block';
-                                                        }
-                                                    } else if (isImage) {
-                                                        const imageElement = document.getElementById('result-image');
-                                                        imageElement.src = urlWithBust;
-                                                        imageElement.style.display = 'block';
-                                                        const downloadImage = document.getElementById('download-image');
-                                                        if (downloadImage) {
-                                                            downloadImage.href = mediaUrl;
-                                                            downloadImage.style.display = 'block';
-                                                        }
-                                                    }
-
-                                                    spinner.style.display = 'none';
-                                                    statusBox.textContent = ''; // clear finalizing text
-                                                    stopChecking = true;
-                                                    return;
-                                                } else {
-                                                    if (attempts < maxAttempts) {
-                                                        setTimeout(tryFinalCheck, tryInterval);
-                                                    } else {
-                                                        statusBox.textContent = '❌ Error: media not found after finalizing.';
-                                                        spinner.style.display = 'none';
-                                                        stopChecking = true;
-                                                    }
-                                                }
-                                            })
-                                            .catch(() => {
-                                                if (attempts < maxAttempts) {
-                                                    setTimeout(tryFinalCheck, tryInterval);
-                                                } else {
-                                                    statusBox.textContent = '❌ Error: network problem while checking media.';
-                                                    spinner.style.display = 'none';
-                                                    stopChecking = true;
-                                                }
-                                            });
-                                    }
-
-                                    // Start final-check attempts (do not call pollStatus again here)
-                                    tryFinalCheck();
-                                    return;
-                                } else if (data.status === 'failed') {
-                                    statusBox.textContent = '❌ Task failed.';
-                                    spinner.style.display = 'none';
-                                    stopChecking = true;
-                                    return;
-                                }
-
-                                // continue polling normally
-                                setTimeout(() => pollStatus(id), 2000);
-                            })
-                            .catch(() => {
-                                document.getElementById('statusBox').textContent = 'status unknown';
-                                // keep polling in case transient error
-                                setTimeout(() => pollStatus(id), 2000);
-                            });
-                    }
-
-                    pollStatus(taskId);
-
-                </script>
-            {% endif %}
-        </div>
+        </script>
+        {% endif %}
     </div>
+</div>
 
 <!-- Display message -->
 <!-- <div class="site-overlay-message" role="status" aria-live="polite">
@@ -383,31 +397,39 @@
 </div> -->
 
 <style>
-  .site-overlay-message{
-    position: absolute;            
-    left: 50%;                     /* horizontally center reference point */
-    bottom: 10px;                     
-    transform: translateX(-50%);   
-    background: rgba(0,0,0,0.6);   /* semi-transparent black */
-    color: #ffffff;                /* white text */
-    padding: 14px 18px;
-    font-size: 16px;
-    line-height: 1;
-    border-radius: 6px 6px 0 0;    
-    z-index: 9999;                 /* sit on top of other content */
-    text-align: center;
-    max-width: 90%;                /* keeps it from overflowing on small screens */
-    box-sizing: border-box;
-    pointer-events: none;          
-  }
+    .site-overlay-message {
+        position: absolute;
+        left: 50%;
+        /* horizontally center reference point */
+        bottom: 10px;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.6);
+        /* semi-transparent black */
+        color: #ffffff;
+        /* white text */
+        padding: 14px 18px;
+        font-size: 16px;
+        line-height: 1;
+        border-radius: 6px 6px 0 0;
+        z-index: 9999;
+        /* sit on top of other content */
+        text-align: center;
+        max-width: 90%;
+        /* keeps it from overflowing on small screens */
+        box-sizing: border-box;
+        pointer-events: none;
+    }
 
-  /* If you want it readable on very small screens, reduce font-size */
-  @media (max-width:420px){
-    .site-overlay-message{ font-size:14px; padding:10px 12px; }
-  }
+    /* If you want it readable on very small screens, reduce font-size */
+    @media (max-width:420px) {
+        .site-overlay-message {
+            font-size: 14px;
+            padding: 10px 12px;
+        }
+    }
 </style>
 
-  
+
 {% endblock %}
 
 {% block extra_scripts %}
@@ -418,74 +440,73 @@
 </script>
 {% endif %} -->
 <script src="{% static 'js/manim/exampleGallery.js' %}"></script>
-    
+
 <script src="{% static 'js/manim/opencode.js' %}"></script>
 
 <script src="{% static 'js/manim.js' %}"></script>
 
 <script>
 
-// shortcuts 
-// mod = Ctrl on Win/Linux, Cmd on Mac
-const shortcuts = [
-  {
-    key: "s",
-    mod: true,       
-    shift: false,
-    alt: false,
-    action: () => document.getElementById("save-btn").click()
-  },
-  {
-    key: "n",
-    mod: true,      
-    shift: false,
-    alt: true,
-    action: () => document.getElementById("new-btn").click()
-  },
-  {
-    key: "Enter",
-    mod: false,
-    shift: true,
-    alt: false,
-    action: () => document.getElementById("run-btn").click()
-  }
-];
+    // shortcuts 
+    // mod = Ctrl on Win/Linux, Cmd on Mac
+    const shortcuts = [
+        {
+            key: "s",
+            mod: true,
+            shift: false,
+            alt: false,
+            action: () => document.getElementById("save-btn").click()
+        },
+        {
+            key: "n",
+            mod: true,
+            shift: false,
+            alt: true,
+            action: () => document.getElementById("new-btn").click()
+        },
+        {
+            key: "Enter",
+            mod: false,
+            shift: true,
+            alt: false,
+            action: () => document.getElementById("run-btn").click()
+        }
+    ];
 
-// Main listener
-document.addEventListener("keydown", (e) => {
-  for (const s of shortcuts) {
-    const keyMatch = e.key.toLowerCase() === s.key.toLowerCase();
-    const modMatch = s.mod ? (e.ctrlKey || e.metaKey) : (!e.ctrlKey && !e.metaKey);
-    const shiftMatch = s.shift ? e.shiftKey : !e.shiftKey;
-    const altMatch = s.alt ? e.altKey : !e.altKey;
+    // Main listener
+    document.addEventListener("keydown", (e) => {
+        for (const s of shortcuts) {
+            const keyMatch = e.key.toLowerCase() === s.key.toLowerCase();
+            const modMatch = s.mod ? (e.ctrlKey || e.metaKey) : (!e.ctrlKey && !e.metaKey);
+            const shiftMatch = s.shift ? e.shiftKey : !e.shiftKey;
+            const altMatch = s.alt ? e.altKey : !e.altKey;
 
-    if (keyMatch && modMatch && shiftMatch && altMatch) {
-      e.preventDefault();   // prevent browser default only for this shortcut
-      s.action();
-      break;                // stop after first match
-    }
-  }
-});
+            if (keyMatch && modMatch && shiftMatch && altMatch) {
+                e.preventDefault();   // prevent browser default only for this shortcut
+                s.action();
+                break;                // stop after first match
+            }
+        }
+    });
 
 
 
-// document.addEventListener("keydown", function(e) {
-//   if (e.ctrlKey && e.key === "s") {
-//     e.preventDefault();
-//     document.getElementById("save-btn").click();
-//   }
+    // document.addEventListener("keydown", function(e) {
+    //   if (e.ctrlKey && e.key === "s") {
+    //     e.preventDefault();
+    //     document.getElementById("save-btn").click();
+    //   }
 
-//   if (e.ctrlKey && e.key === "r") {
-//     e.preventDefault();
-//     document.getElementById("run-btn").click();
-//   }
+    //   if (e.ctrlKey && e.key === "r") {
+    //     e.preventDefault();
+    //     document.getElementById("run-btn").click();
+    //   }
 
-//   if (e.ctrlKey && e.key === "n") {
-//     e.preventDefault();
-//     document.getElementById("new-btn").click();
-//   }
-// });
+    //   if (e.ctrlKey && e.key === "n") {
+    //     e.preventDefault();
+    //     document.getElementById("new-btn").click();
+    //   }
+    // });
 </script>
 
 {% endblock %}
- 

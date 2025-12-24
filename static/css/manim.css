@@ -50,3 +50,120 @@
         height: auto;
         margin-bottom: 0px;
     }
+
+
+    /* modal */
+/* === Modal overlay === */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+
+  display: none; /* IMPORTANT */
+  align-items: center;
+  justify-content: center;
+
+  z-index: 9999;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.modal.show {
+  display: flex;
+}
+
+/* === Modal box === */
+.modal-content {
+  background: #1e1e1e;
+  color: #d4d4d4;
+
+  width: 420px;
+  max-width: calc(100vw - 32px);
+
+  padding: 20px;
+  border-radius: 6px;
+
+  border: 1px solid #2a2a2a;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+
+  position: relative;
+}
+
+/* === Close button === */
+.close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+
+  background: none;
+  border: none;
+  color: #cccccc;
+
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: #ffffff;
+}
+
+/* === Form === */
+.modal-content label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: #cccccc;
+}
+
+.modal-content input[type="text"] {
+  width: 100%;
+  padding: 8px 10px;
+
+  background: #252526;
+  border: 1px solid #3c3c3c;
+  border-radius: 4px;
+
+  color: #ffffff;
+  font-size: 13px;
+}
+
+.modal-content input[type="text"]:focus {
+  outline: none;
+  border-color: #007acc;
+}
+
+/* === Actions === */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+
+button {
+  font-size: 13px;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+button.primary {
+  background: #0e639c;
+  color: #fff;
+}
+
+button.primary:hover {
+  background: #1177bb;
+}
+
+button.secondary {
+  background: transparent;
+  color: #cccccc;
+  border-color: #3c3c3c;
+}
+
+button.secondary:hover {
+  background: #2a2a2a;
+}
+
