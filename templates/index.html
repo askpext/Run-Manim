@@ -3,19 +3,20 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 
 
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-G43JV3W9MS"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G43JV3W9MS"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
 
-  gtag('config', 'G-G43JV3W9MS');
-</script>
+        gtag('config', 'G-G43JV3W9MS');
+    </script>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,8 +30,9 @@
     <link rel="mask-icon" href="{% static 'fav/safari-pinned-tab.svg' %}" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
-    
-    <style>
+
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <!-- <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -63,8 +65,9 @@
             bottom: 0;
             width: 100%;
         }
-    </style>
+    </style> -->
 </head>
+
 <body>
     <header>
         <h1>Welcome to runwith</h1>
@@ -72,12 +75,27 @@
     </header>
     <div class="container">
         <h2>About runwith</h2>
-        <p>runwith is a platform designed for running Python libraries in the cloud, enabling access to powerful libraries like Manim from anywhere.</p>
+        <p>runwith is a platform designed for running Python libraries in the cloud, enabling access to powerful
+            libraries like Manim from anywhere.</p>
         <h2>Get Started</h2>
         <p>Start using Manim in the cloud today! Visit <a href="https://manim.runwith.cloud">manim.runwith.cloud</a></p>
+
+        <h2>Available Libraries</h2>
+
+        <div class="card-grid">
+            <a href="https://manim.runwith.cloud" class="card">
+                <img src="{% static 'img/placeholder.png' %}" alt="Manim">
+                <h3>Manim</h3>
+                <p>Mathematical animations powered by Python. Render videos directly in the cloud.</p>
+            </a>
+        </div>
     </div>
+
+
+
     <footer>
-        <p>&copy; 2024 runwith. All rights reserved.</p>
+        <p>&copy; 2026 runwith. All rights reserved.</p>
     </footer>
 </body>
+
 </html>
