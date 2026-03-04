@@ -176,84 +176,12 @@
         <a id="download-video" href="" class="download-btn" style="display:none" download>Download</a>
         <p id="loading-message-video" style="display: none;">Generating video...</p>
 
-        <!-- 
-
-                <script>
-                    const videoUrl = "{{ MEDIA_URL }}{{ media_name }}.mp4";
-                    const videoElement = document.getElementById('result-video');
-                    const videoSource = videoElement.getElementsByTagName('source')[0];
-                    const downloadVideo = document.getElementById('download-video');
-                    const loadingMessageVideo = document.getElementById('loading-message-video');
-                    const spinner = document.getElementById('spinner');
-
-                    videoElement.style.display = 'none';
-                    downloadVideo.style.display = 'none';
-                    spinner.style.display = 'block';
-
-                    function checkVideo() {
-                        if (stopChecking) return;
-
-                        fetch(videoUrl, { method: 'HEAD' })
-                            .then(res => {
-                                if (res.ok) {
-                                    videoSource.src = videoUrl;
-                                    videoElement.load();
-                                    videoElement.style.display = 'block';
-                                    downloadVideo.href = videoUrl;
-                                    downloadVideo.style.display = 'block';
-                                    loadingMessageVideo.style.display = 'none';
-                                    spinner.style.display = 'none';
-                                } else {
-                                    setTimeout(checkVideo, 2000);
-                                }
-                            })
-                            .catch(() => {
-                                setTimeout(checkVideo, 2000);
-                            });
-                    }
-
-                    checkVideo();
-                </script> -->
+        
         {% elif "self.add" in previous_code %}
         <img id="result-image" src="" alt="Image" style="display: none;">
         <a id="download-image" href="" class="download-btn" style="display: none;" download>Download</a>
         <p id="loading-message" style="display: none;">Generating image...</p>
 
-        <!-- <script>
-                    const imageUrl = "{{ MEDIA_URL }}{{ media_name }}.png";
-                    const imageElement = document.getElementById('result-image');
-                    const loadingMessage = document.getElementById('loading-message');
-                    const downloadImage = document.getElementById('download-image');
-                    const spinner = document.getElementById('spinner');
-
-
-                    imageElement.style.display = 'none';
-                    downloadImage.style.display = 'none';
-                    spinner.style.display = 'block';
-
-
-                    function checkImage() {
-                        if (stopChecking) return;
-                        fetch(imageUrl, { method: 'HEAD' })
-                            .then(res => {
-                                if (res.ok) {
-                                    imageElement.src = imageUrl;
-                                    downloadImage.href = imageUrl;
-                                    loadingMessage.style.display = 'none';
-                                    imageElement.style.display = 'block';
-                                    downloadImage.style.display = 'block';
-                                    spinner.style.display = 'none';
-                                } else {
-                                    setTimeout(checkImage, 2000);
-                                }
-                            })
-                            .catch(() => {
-                                setTimeout(checkImage, 2000);
-                            });
-                    }
-
-                    checkImage();
-                </script> -->
         {% else %}
         <p>No output available</p>
         {% endif %}
@@ -391,7 +319,7 @@
     </div>
 </div>
 
-<!-- Display message -->
+<!-- Display message --> 
 <!-- <div class="site-overlay-message" role="status" aria-live="polite">
   sorry, this service is not available right now. But I am working on it. Please check back later!
 </div> -->
@@ -490,23 +418,6 @@
     });
 
 
-
-    // document.addEventListener("keydown", function(e) {
-    //   if (e.ctrlKey && e.key === "s") {
-    //     e.preventDefault();
-    //     document.getElementById("save-btn").click();
-    //   }
-
-    //   if (e.ctrlKey && e.key === "r") {
-    //     e.preventDefault();
-    //     document.getElementById("run-btn").click();
-    //   }
-
-    //   if (e.ctrlKey && e.key === "n") {
-    //     e.preventDefault();
-    //     document.getElementById("new-btn").click();
-    //   }
-    // });
 </script>
 
 {% endblock %}
