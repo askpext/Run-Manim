@@ -55,6 +55,12 @@
     - [Debian](https://docs.docker.com/engine/install/debian/)
     
     - [Other systems](https://docs.docker.com/engine/install/)
+  
+   Pull manim image
+
+    ```
+     docker pull manimcommunity/manim
+    ```
 
    Allow docker client to talk to docker
 
@@ -112,6 +118,7 @@
     ```
     python manage.py runserver
     ```
+
 
 
 
