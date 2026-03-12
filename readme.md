@@ -22,7 +22,7 @@
   - Other popular libraries. Since we are running from a docker image, any library with an image can be run. Users can select a library and start coding.
 
  But, I can't do that alone. I need your help.
- **Please contribute.**
+ **Please [contribute](##contributing).**
  
  
 
@@ -141,12 +141,13 @@ GNU Affero General Public License v3.0
 ## Contributing
 
 We still have to
-- Fix save/Open workflow
+- Fix Save/Open workflow
 - Make Code shareable
 - Make a Library of user generated code.
-- Extend to other libraries, since we are using docker image of manim, we can replace that with any library. I am thinking of a dropdown to select a library to run.
+- Extend to other libraries, Since we are using docker image of manim, we can replace that with any library. I am thinking of a dropdown to select a library to run.
 
 You are welcome to open a pull request
+
 
 
 
