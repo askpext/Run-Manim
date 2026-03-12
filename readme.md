@@ -22,7 +22,7 @@
   - Other popular libraries. Since we are running from a docker image, any library with an image can be run. Users can select a library and start coding.
 
  But, I can't do that alone. I need your help.
- **[Please contribute](contributing).**
+ **[Please contribute](##contributing).**
  
  
 
@@ -147,6 +147,7 @@ We still have to
 - Extend to other libraries, Since we are using docker image of manim, we can replace that with any library. I am thinking of a dropdown to select a library to run.
 
 You are welcome to open a pull request
+
 
 
 
