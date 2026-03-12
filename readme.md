@@ -136,9 +136,17 @@
 - DjangoQ
 
 ## License
+GNU Affero General Public License v3.0
 
 ## Contributing
 
+We still have to
+- Fix save/Open workflow
+- Make Code shareable
+- Make a Library of user generated code.
+- Extend to other libraries, since we are using docker image of manim, we can replace that with any library. I am thinking of a dropdown to select a library to run.
+
+You are welcome to open a pull request
 
 
 
