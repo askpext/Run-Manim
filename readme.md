@@ -127,7 +127,13 @@
     python manage.py runserver
     ```
 
+## Tech Stack
 
+- Python
+- Django
+- Docker
+- Postgresql
+- DjangoQ
 
 
 
