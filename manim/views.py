@@ -347,59 +347,6 @@ def get_code_name(request):
     return JsonResponse({"status": "error", "message": "Invalid request method"}, status=400)
 
 
-# def task_status_view(request, task_id):
-#     task_id = str(task_id)
-#     if Task.objects.filter(id=task_id).exists():
-#         task = Task.objects.get(id=task_id)
-
-#         if task.success:
-#             return JsonResponse({'status': 'done'})
-
-#         # --- ROBUST ERROR EXTRACTION ---
-#         raw = task.result  # Don't cast to str yet
-
-#         # Django-Q sometimes stores the actual exception object, not a string
-#         if isinstance(raw, BaseException):
-#             # It's a real exception object — get its message directly
-#             error_line = f"{type(raw).__name__}: {raw}"
-#         else:
-#             raw = str(raw or "")
-#             print(f"[task_status_view DEBUG] raw result: {repr(raw)}")  # <-- add this temporarily
-#             lines = raw.strip().splitlines()
-
-#             error_line = None
-#             for line in reversed(lines):
-#                 line = line.strip()
-#                 if not line:
-#                     continue
-#                 if "Traceback" in line:
-#                     continue
-#                 if line.startswith("File "):
-#                     continue
-#                 if re.match(r'^[A-Za-z]+Error:', line):
-#                     error_line = line
-#                     break
-
-#             if not error_line:
-#                 for line in reversed(lines):
-#                     line = line.strip()
-#                     if line and "Traceback" not in line and not line.startswith("File "):
-#                         error_line = line
-#                         break
-
-#             if not error_line:
-#                 error_line = lines[-1] if lines else "Unknown error"
-
-#         return JsonResponse({
-#             'status': 'failed',
-#             'error': error_line
-#         })
-
-#     if OrmQ.objects.filter(payload__contains=task_id).exists():
-#         return JsonResponse({'status': 'queued'})
-
-#     return JsonResponse({'status': 'processing'})
-
 def task_status_view(request, task_id):
     task_id = str(task_id)
     if Task.objects.filter(id=task_id).exists():
@@ -408,13 +355,17 @@ def task_status_view(request, task_id):
         if task.success:
             return JsonResponse({'status': 'done'})
 
-        # DEBUG — return everything raw so we can see what the server actually has
-        return JsonResponse({
-            'status': 'failed',
-            'error': 'debug',
-            'debug_result_type': str(type(task.result)),
-            'debug_result_repr': repr(task.result)[:500],  # cap at 500 chars
-            'debug_result_str': str(task.result or "")[:500],
-            'debug_success': task.success,
-        })
-    ...
+        raw = str(task.result or "")
+        lines = raw.strip().splitlines()
+
+        error_line = next(
+            (line.strip() for line in reversed(lines) if line.strip()),
+            "Unknown error"
+        )
+
+        return JsonResponse({'status': 'failed', 'error': error_line})
+
+    if OrmQ.objects.filter(payload__contains=task_id).exists():
+        return JsonResponse({'status': 'queued'})
+
+    return JsonResponse({'status': 'processing'})
