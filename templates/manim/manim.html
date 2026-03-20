@@ -275,7 +275,7 @@
                                             if (attempts < maxAttempts) {
                                                 setTimeout(tryFinalCheck, tryInterval);
                                             } else {
-                                                statusBox.textContent = '❌ Error: Could not Render media.';
+                                                statusBox.textContent = data.error || '❌ Error: Could not Render media.';
                                                 spinner.style.display = 'none';
                                                 stopChecking = true;
                                             }
