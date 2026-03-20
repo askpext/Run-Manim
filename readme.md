@@ -8,14 +8,22 @@
 
 <img width="1920" height="992" alt="Manim_Screenshot_cropped" src="https://github.com/user-attachments/assets/b96a1cc5-5c44-4e15-babf-34b76c1d225d" />
 
+## What is runwith?
+ Runwith is a web interface for running manim, but can be extended to any python library.
+ It just runs a docker container with the manim image.
+ I am currently running it in [runwith.cloud](https://runwith.cloud), enabling users to 
+  - use manim without any installation.
+  - run in mobile phones and tablets with low resources.
+  - save the code to cloud and continue cross-device
 
-## Key Features
-  
- - No need to install libraries or manage dependencies.
- - Continue your work seamlessly across different devices.
- - Run in mobile phones and tablets with ease.
-   
- Visit [runwith.cloud](https://runwith.cloud) to use the website.
+ But I also hope it could grow to more than that. It could:
+  - Make shareable code snippets
+  - A library of manim code by users - publicy available, editable and executable.
+  - Other popular libraries. Since we are running from a docker image, any library with an image can be run. Users can select a library and start coding.
+
+ But, I can't do that alone. I need your help.
+ **Please contribute**
+ 
  
 
 
@@ -55,6 +63,12 @@
     - [Debian](https://docs.docker.com/engine/install/debian/)
     
     - [Other systems](https://docs.docker.com/engine/install/)
+  
+   Pull manim image
+
+    ```
+     docker pull manimcommunity/manim
+    ```
 
    Allow docker client to talk to docker
 
@@ -112,6 +126,31 @@
     ```
     python manage.py runserver
     ```
+
+## Tech Stack
+
+- Python
+- Django
+- Docker
+- Postgresql
+- DjangoQ
+
+## License
+GNU Affero General Public License v3.0
+
+## Contributing
+
+We still have to
+- Fix Save/Open workflow
+- Make Code shareable
+- Make a Library of user generated code.
+- Extend to other libraries, Since we are using docker image of manim, we can replace that with any library. I am thinking of a dropdown to select a library to run.
+
+You are welcome to open a pull request
+
+
+
+
 
 
 
