@@ -24,6 +24,7 @@ from django_q.conf import Conf
 from datetime import timedelta
 from django.utils import timezone
 
+import re
  
 
 
@@ -75,10 +76,11 @@ def run_manim_command(image_name, base_dir, media_name, code_filename):
         logs = container.logs().decode()
         print("=== CONTAINER LOGS ===")
         print(logs)
+        
 
         if exit_code != 0:
-            print(f"Container exited with non-zero status code: {exit_code}")
-
+            raise Exception(logs)
+        return logs
     except docker.errors.ContainerError as e:
         print(f"Container failed: {e}")
         raise
@@ -95,7 +97,7 @@ def run_manim_command(image_name, base_dir, media_name, code_filename):
             except Exception as e:
                 print(f"Error removing container: {e}")
     
-    return logs
+    return logs     
 
 
 
@@ -133,7 +135,7 @@ def run_docker_command(media_name, code):
         print(result_message)
         print("---- FULL TRACE FOR LOG ----")
         print(full_tb)
-        return result_message
+        raise
     finally:
         # Ensure cleanup happens even if the command fails
         if os.path.exists(code_filepath):
@@ -345,23 +347,53 @@ def get_code_name(request):
     return JsonResponse({"status": "error", "message": "Invalid request method"}, status=400)
 
 
-
-
-def get_task_status(task_id):
-    # 1. Completed or failed
+def task_status_view(request, task_id):
+    task_id = str(task_id)
     if Task.objects.filter(id=task_id).exists():
         task = Task.objects.get(id=task_id)
-        print(f'completed task :{task_id}')
-        return "done" if task.success else "failed"
 
-    # 2. Still queued
+        if task.success:
+            return JsonResponse({'status': 'done'})
+
+        # --- CLEAN ERROR EXTRACTION HERE ---
+        raw = str(task.result or "")
+        lines = raw.strip().splitlines()
+
+        error_line = None
+        for line in reversed(lines):
+            line = line.strip()
+
+            # skip useless lines
+            if not line:
+                continue
+            if "Traceback" in line:
+                continue
+            if line.startswith("File "):
+                continue
+
+            # match real Python errors
+            if re.match(r'^[A-Za-z]+Error:', line):
+                error_line = line
+                break
+
+        # fallback (still avoid traceback)
+        if not error_line:
+            for line in reversed(lines):
+                line = line.strip()
+                if line and "Traceback" not in line:
+                    error_line = line
+                    break
+
+        if not error_line:
+            error_line = lines[-1] if lines else "Unknown error"
+
+        return JsonResponse({
+            'status': 'failed',
+            'error': error_line
+        })
+
     if OrmQ.objects.filter(payload__contains=task_id).exists():
-        return "queued"
+        return JsonResponse({'status': 'queued'})
 
-    # 3. Neither queued nor done → must be processing
-    return "processing"
- 
+    return JsonResponse({'status': 'processing'})
 
-def task_status_view(request, task_id):
-    status = get_task_status(str(task_id))
-    return JsonResponse({'status': status})

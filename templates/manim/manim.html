@@ -285,7 +285,7 @@
                                         if (attempts < maxAttempts) {
                                             setTimeout(tryFinalCheck, tryInterval);
                                         } else {
-                                            statusBox.textContent = '❌ Error: network problem while checking media.';
+                                            statusBox.textContent = data.error || '❌ Error: network problem while checking media.';
                                             spinner.style.display = 'none';
                                             stopChecking = true;
                                         }
@@ -296,7 +296,7 @@
                             tryFinalCheck();
                             return;
                         } else if (data.status === 'failed') {
-                            statusBox.textContent = '❌ Task failed.';
+                            statusBox.textContent = data.error || '❌ Task failed.';
                             spinner.style.display = 'none';
                             stopChecking = true;
                             return;
