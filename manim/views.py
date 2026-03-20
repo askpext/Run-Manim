@@ -355,37 +355,40 @@ def task_status_view(request, task_id):
         if task.success:
             return JsonResponse({'status': 'done'})
 
-        # --- CLEAN ERROR EXTRACTION HERE ---
-        raw = str(task.result or "")
-        lines = raw.strip().splitlines()
+        # --- ROBUST ERROR EXTRACTION ---
+        raw = task.result  # Don't cast to str yet
 
-        error_line = None
-        for line in reversed(lines):
-            line = line.strip()
+        # Django-Q sometimes stores the actual exception object, not a string
+        if isinstance(raw, BaseException):
+            # It's a real exception object — get its message directly
+            error_line = f"{type(raw).__name__}: {raw}"
+        else:
+            raw = str(raw or "")
+            print(f"[task_status_view DEBUG] raw result: {repr(raw)}")  # <-- add this temporarily
+            lines = raw.strip().splitlines()
 
-            # skip useless lines
-            if not line:
-                continue
-            if "Traceback" in line:
-                continue
-            if line.startswith("File "):
-                continue
-
-            # match real Python errors
-            if re.match(r'^[A-Za-z]+Error:', line):
-                error_line = line
-                break
-
-        # fallback (still avoid traceback)
-        if not error_line:
+            error_line = None
             for line in reversed(lines):
                 line = line.strip()
-                if line and "Traceback" not in line:
+                if not line:
+                    continue
+                if "Traceback" in line:
+                    continue
+                if line.startswith("File "):
+                    continue
+                if re.match(r'^[A-Za-z]+Error:', line):
                     error_line = line
                     break
 
-        if not error_line:
-            error_line = lines[-1] if lines else "Unknown error"
+            if not error_line:
+                for line in reversed(lines):
+                    line = line.strip()
+                    if line and "Traceback" not in line and not line.startswith("File "):
+                        error_line = line
+                        break
+
+            if not error_line:
+                error_line = lines[-1] if lines else "Unknown error"
 
         return JsonResponse({
             'status': 'failed',
