@@ -50,7 +50,7 @@ def find_class_name(code):
     pattern = r"class\s+(\w+)\s*\(" # example: class class_name(scene)
 
     for line in code.split('\n'):
-        print(f"Checking line: {line}") 
+        print(f"> {line}") 
         # Use regular expression to find the class name
         match = re.match(pattern, line)
         if match:
