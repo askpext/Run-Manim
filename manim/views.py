@@ -355,9 +355,12 @@ def task_status_view(request, task_id):
         if task.success:
             return JsonResponse({'status': 'done'})
 
-        raw = str(task.result or "")
-        lines = raw.strip().splitlines()
+        try:
+            raw = str(task.result or "")
+        except Exception as e:
+            return JsonResponse({'status': 'failed', 'error': f'could not read result: {e}'})
 
+        lines = raw.strip().splitlines()
         error_line = next(
             (line.strip() for line in reversed(lines) if line.strip()),
             "Unknown error"
