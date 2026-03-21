@@ -104,7 +104,7 @@
             <div>
                 <!-- Run button -->
                 <button id="run-btn" type="submit" value="Run" onclick="ShowSpinner(); HidePlaceholder();"
-                    form="code-form" title="(Shift+Enter) Torture my potato server">
+                    form="code-form" title="Torture my potato server (Ctrl+Enter)">
                     <i class="fas fa-play"></i><i class="fas">RUN</i></button>
                 <!-- Theme toggle button -->
                 <label style="display: none;" class="theme-toggle"
@@ -394,8 +394,8 @@
         },
         {
             key: "Enter",
-            mod: false,
-            shift: true,
+            mod: true,
+            shift: false,
             alt: false,
             action: () => document.getElementById("run-btn").click()
         }
