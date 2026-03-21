@@ -71,6 +71,8 @@ def run_manim_command(image_name, base_dir, media_name, code_filename):
         # Wait for the container to finish, with a timeout
         result = container.wait(timeout=timeout_seconds)
         exit_code = result.get('StatusCode', -1)
+        
+        print(f"EXIT CODE: {exit_code}")
 
         # Get logs
         logs = container.logs().decode()
