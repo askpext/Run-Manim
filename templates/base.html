@@ -2,16 +2,17 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-G43JV3W9MS"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-G43JV3W9MS');
-</script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G43JV3W9MS"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-G43JV3W9MS');
+    </script>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,58 +33,70 @@
 
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
 
+    <!-- Google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bitcount+Single:wght@100..900&family=Freckle+Face&family=Germania+One&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
+        rel="stylesheet">
+
     <!--  meta tags for link preview appearance -->
     <meta property="og:title" content="Runwith (Formerly CloudPy)">
     <meta property="og:description" content="Run python libraries on the cloud">
-    <meta property="og:image" content="https://raw.githubusercontent.com/thesophile/cloudpy-public-media/main/icon-2_transparent.png">
+    <meta property="og:image"
+        content="https://raw.githubusercontent.com/thesophile/cloudpy-public-media/main/icon-2_transparent.png">
     <meta property="og:url" content="https://runwith.cloud">
-    
+
 
     {% block extra_head %}
     <!-- Additional scripts or styles specific to pages extending this base template -->
     {% endblock %}
-    
+
 </head>
 
 <body>
-    <nav>
-        <div class="nav-left">
-            <a href="https://runwith.cloud"><i class="fas">runwith</i></a> <a href="/"><i class="fas">MANIM<sup>β</sup></i></a>
-        </div>
+    <header>
+        <nav>
+            <div class="nav-left">
+                <a href="https://runwith.cloud">
+                    <h1>runwith</h1>
+                </a> <a href="/">
+                    <h1>MANIM<sup>β</sup></h1>
+                </a>
+            </div>
 
-        <div class="nav-center">
-            
-        </div>
-        
-        <div class="nav-right">
-            {% if user.is_authenticated %}
+            <div class="nav-right">
+                {% if user.is_authenticated %}
                 <p>{{ user.username }}</p>
-            {% endif %}
-            <div class="menu">
-                <a href="https://ko-fi.com/abhinavbabu" title="Sorry, but I am broke.">Donate</a>
-                <a href="{% url 'contact' %}" title="Free free to leave a message (I am not gonna read it)">Contact</a>
-                <div class="dropdown">
-                    <a href="#" class="dropbtn">Account &#9662;</a>
-                    <div class="dropdown-content">
-                        <a href="{% url 'login' %}">Login</a>
-                        <a href="{% url 'signup' %}" title="Once you go here, there is no coming back.(at least until I implement a button to delete account)">Signup</a>
-                        <a href="{% url 'logout' %}">Logout</a>
+                {% endif %}
+                <div class="menu">
+                    <a href="https://ko-fi.com/abhinavbabu" title="Sorry, but I am broke.">Donate</a>
+                    <a href="{% url 'contact' %}"
+                        title="Free free to leave a message (I am not gonna read it)">Contact</a>
+                    <div class="dropdown">
+                        <a href="#" class="dropbtn">Account &#9662;</a>
+                        <div class="dropdown-content">
+                            <a href="{% url 'login' %}">Login</a>
+                            <a href="{% url 'signup' %}"
+                                title="Once you go here, there is no coming back.(at least until I implement a button to delete account)">Signup</a>
+                            <a href="{% url 'logout' %}">Logout</a>
+                        </div>
                     </div>
                 </div>
+                <div class="hamburger">
+                    &#9776;
+                </div>
             </div>
-            <div class="hamburger">
-                &#9776;
-            </div>
-        </div>
-    </nav>
-    
+        </nav>
+    </header>
 
-    
-        {% block content %}
-        <!-- Page-specific content will be injected here -->
-        {% endblock %}
-    
-        <!-- <footer style="text-align: center;">
+
+
+    {% block content %}
+    <!-- Page-specific content will be injected here -->
+    {% endblock %}
+
+    <!-- <footer style="text-align: center;">
             <p>
                 <small>
                     This project is open-source. 
@@ -91,82 +104,83 @@
                 </small>
             </p>
         </footer> -->
-        
+
 
     {% if user.is_authenticated %}
-        <script>
-            var isAuthenticated = true;
-        </script>
+    <script>
+        var isAuthenticated = true;
+    </script>
     {% else %}
-        <script>
-            var isAuthenticated = false;
-        </script>
+    <script>
+        var isAuthenticated = false;
+    </script>
     {% endif %}
 
     {% if current_code_name %}
-        <script>
-            var current_code_present = true;
-        </script>
+    <script>
+        var current_code_present = true;
+    </script>
     {% else %}
-        <script>
-            var current_code_present = false;
-        </script>
+    <script>
+        var current_code_present = false;
+    </script>
     {% endif %}
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<script>
+    <script>
 
-    const menu = document.getElementsByClassName('menu')[0];
+        const menu = document.getElementsByClassName('menu')[0];
 
-    function detectDevice() {
-        if (window.innerWidth <= 768) {
-            // Mobile device
-            menu.style.display = 'none';
+        function detectDevice() {
+            if (window.innerWidth <= 768) {
+                // Mobile device
+                menu.style.display = 'none';
 
-            document.addEventListener('DOMContentLoaded', () => {
-            const menu = document.getElementsByClassName('menu')[0];
-            const hamburger = document.getElementsByClassName('hamburger')[0];
-            
-            // Toggle menu visibility
-            hamburger.addEventListener('click', (e) => {
-                e.stopPropagation();  // Prevent event from bubbling up to the document
-                if (menu.style.display === 'none') {
-                    menu.style.display = 'flex';
-                } else {
-                    menu.style.display = 'none';
-                }
-                console.log(menu.style.display);
-            });
+                document.addEventListener('DOMContentLoaded', () => {
+                    const menu = document.getElementsByClassName('menu')[0];
+                    const hamburger = document.getElementsByClassName('hamburger')[0];
 
-            // Click outside menu to hide it
-            document.addEventListener('click', (e) => {
-                if (!menu.contains(e.target) && !hamburger.contains(e.target)) {
-                    console.log('Clicked outside menu');
-                    menu.style.display = 'none';
-                }
-            });
-        });
-        } else {
-            // Desktop device
-            menu.style.display = 'flex';
+                    // Toggle menu visibility
+                    hamburger.addEventListener('click', (e) => {
+                        e.stopPropagation();  // Prevent event from bubbling up to the document
+                        if (menu.style.display === 'none') {
+                            menu.style.display = 'flex';
+                        } else {
+                            menu.style.display = 'none';
+                        }
+                        console.log(menu.style.display);
+                    });
+
+                    // Click outside menu to hide it
+                    document.addEventListener('click', (e) => {
+                        if (!menu.contains(e.target) && !hamburger.contains(e.target)) {
+                            console.log('Clicked outside menu');
+                            menu.style.display = 'none';
+                        }
+                    });
+                });
+            } else {
+                // Desktop device
+                menu.style.display = 'flex';
+            }
         }
-    }
 
-    // Call the function on load
-    detectDevice();
+        // Call the function on load
+        detectDevice();
 
-    // event listener to handle screen resizing
-    window.addEventListener('resize', detectDevice);
+        // event listener to handle screen resizing
+        window.addEventListener('resize', detectDevice);
 
-        
-    
 
-</script>
-    
-    
+
+
+    </script>
+
+
     {% block extra_scripts %}
     <!-- Additional scripts specific to pages extending this base template -->
     {% endblock %}
 </body>
+
 </html>
