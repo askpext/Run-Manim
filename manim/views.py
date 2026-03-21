@@ -26,7 +26,7 @@ from django.utils import timezone
 
 import re
  
-
+print('Manim 21-03-2026 11 46 AM - views.py loaded')
 
 def run_manim_command(image_name, base_dir, media_name, code_filename):
     client = docker.from_env()
