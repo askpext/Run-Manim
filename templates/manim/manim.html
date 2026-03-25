@@ -59,12 +59,15 @@
             <!-- left side -->
             <div>
                 <!-- save button -->
-                <form action="{% url 'save_current_code' %}" method="post" id="save-current-form">
+                <!-- <form action="{% url 'save_current_code' %}" method="post" id="save-current-form">
                     {% csrf_token %}
                     <input type="hidden" name="form_type" value="save_current">
                     <input type="hidden" name="hidden_code_current" id="hidden_code_current">
                     <button type="submit" id="save-btn" title='(Ctrl+s) Save your "precious" project'>Save</button>
-                </form>
+                </form> -->
+
+                <input type="hidden" id="hidden_code_current">
+                <button type="button" id="save-btn">Save</button>
 
                 <!-- New button -->
                 <button type="button" id="new-btn" title="(Ctrl+Alt+n) Save as New">New</button>
@@ -176,7 +179,7 @@
         <a id="download-video" href="" class="download-btn" style="display:none" download>Download</a>
         <p id="loading-message-video" style="display: none;">Generating video...</p>
 
-        
+
         {% elif "self.add" in previous_code %}
         <img id="result-image" src="" alt="Image" style="display: none;">
         <a id="download-image" href="" class="download-btn" style="display: none;" download>Download</a>
@@ -194,7 +197,7 @@
             const taskStatusUrlTemplate = "{% url 'task-status' 'TASK_ID_PLACEHOLDER' %}";
             const taskId = "{{ task_id }}";
             const startTime = Date.now();
-            const maxPollingTime = 360000; // 6 minutes (300s docker timeout + 60s buffer)
+            const maxPollingTime = 140000; // 6 minutes (120s docker timeout + 20s buffer)
             const spinner = document.getElementById('spinner');
 
             spinner.style.display = 'block';
@@ -319,12 +322,12 @@
     </div>
 </div>
 
-<!-- Display message --> 
+<!-- Display message -->
 <!-- <div class="site-overlay-message" role="status" aria-live="polite">
   sorry, this service is not available right now. But I am working on it. Please check back later!
 </div> -->
 
-<style>
+<!-- <style>
     .site-overlay-message {
         position: absolute;
         left: 50%;
@@ -355,7 +358,7 @@
             padding: 10px 12px;
         }
     }
-</style>
+</style> -->
 
 
 {% endblock %}

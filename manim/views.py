@@ -1,5 +1,6 @@
  
 
+import hashlib
 import os
 import docker
 import traceback
@@ -42,12 +43,10 @@ def run_manim_command(image_name, base_dir, media_name, code_filename):
     docker_command = f"manim -ql /mnt/code/{code_filename} -o /mnt/output/{media_name}"
 
     # Resource limits
-    mem_limit = "300m"     # 300MB mem + 500mb idle + 100 buff = 900MB system ram
+    mem_limit = "600m"     # 3.7gb total system ram
     cpus = 0.8             # max 0.8 of 2 vCPU
     pids_limit = 64        # max processes
-
-    # Timeout in seconds for long-running jobs
-    timeout_seconds = 300   # adjust 
+    timeout_seconds = 120  # max 2 minutes
     
     try:
         # Run container detached
@@ -173,7 +172,17 @@ def cluster_is_running(threshold_seconds=90):
     return ClusterHeartbeat.objects.filter(last_ping__gt=threshold).exists() 
  
 
+MAX_QUEUE = 20
 
+def get_queue_size():
+    from django_q.models import OrmQ, Task
+    pending = OrmQ.objects.count()
+    running = Task.objects.filter(stopped__isnull=True).count()
+    print(pending+running)
+    return pending + running
+
+def get_code_hash(code):
+    return hashlib.sha256(code.encode()).hexdigest()
 
 
 def execute_code(request):
@@ -212,19 +221,35 @@ def execute_code(request):
 
         #save the code as a python file 
         code = request.POST.get('code', '')
-        # python_file = save_python_code_to_file(code) #in utils.py - NO LONGER NEEDED HERE
+        code_hash = get_code_hash(code)
 
         previous_code = code
         save_to_cache(previous_code)
 
         # find class name
         class_name = find_class_name(code) # we need this because the resultant video is saved in a folder named after class name. 
-
         print(f'class name: {class_name}')
-
         random_id = uuid.uuid4().hex[:8]
         media_name = f"{class_name}_{random_id}"
         print(f'media_name: {media_name}')
+        
+        existing = cache.get(code_hash)
+        if existing:
+            return JsonResponse({"job_id": existing, "status": "already_running"})
+        # dont enqueue if the same code is already running. This can happen when user clicks the run button multiple times.
+        
+        if get_queue_size() >= MAX_QUEUE:
+            print("Queue is full. Cannot process the request at this time.")
+            context = {
+                'result_message': "Server busy. Too many jobs. Try again in a minute.",
+                'previous_code': code,
+                'saved_codes': saved_codes,
+                'request': request,
+                'current_code_name': current_code_name,
+                'queue_full': True,
+            }
+            return render(request, 'manim/manim.html', context)
+        
 
         task_id = async_task('manim.views.run_docker_command', media_name, code)
         print('Docker task started asynchronously')
