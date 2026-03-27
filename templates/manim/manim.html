@@ -197,7 +197,7 @@
             const taskStatusUrlTemplate = "{% url 'task-status' 'TASK_ID_PLACEHOLDER' %}";
             const taskId = "{{ task_id }}";
             const startTime = Date.now();
-            const maxPollingTime = 140000; // 6 minutes (120s docker timeout + 20s buffer)
+            const maxPollingTime = 140000; // 140 seconds(120s docker timeout + 20s buffer)
             const spinner = document.getElementById('spinner');
 
             spinner.style.display = 'block';
