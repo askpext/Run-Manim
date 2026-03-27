@@ -44,11 +44,13 @@ INSTALLED_APPS = [
 Q_CLUSTER = {
     'name': 'DjangORM',
     'workers': 2,
-    'timeout': 600,
-    'retry': 1200,
-    'queue_limit': 50,
+    'timeout': 60,
+    'retry': 120,
+    'max_attempts': 2,
+    'recycle': 20,
+    'queue_limit': 2,
     'bulk': 10,
-    'save_limit': 100,
+    'save_limit': 20,
     'orm': 'default',
 }
 
