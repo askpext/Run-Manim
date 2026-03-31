@@ -9,25 +9,8 @@ var editor = CodeMirror.fromTextArea(document.getElementById('code'), {
     }
 });
 
-// editor.setValue(previous_code);
-// editor.setOption('theme', 'dracula');
-
-
-
-// var toggle_button = document.getElementsByClassName('theme-toggle')[0];
-// toggle_button.addEventListener('change', function() {
-// var Box = toggle_button.getElementsByTagName('input')[0];    
-// if (Box.checked) {
-//     editor.setOption("theme", "eclipse");  // Dark mode
-// } else {
-//     editor.setOption("theme", "dracula");  // Light mode
-// }
-// });
-
-
 
 // Get the modal
-
 const modal = document.getElementById("save-modal");
 const closeButtons = modal.querySelectorAll(".close");
 
@@ -96,20 +79,6 @@ document.getElementById('save-new-form').addEventListener('submit', function (ev
     hidden_code.value = visible_code;
 });
 
-// openDropdown.onclick = function(event) {
-//     if(!isAuthenticated){
-//         event.preventDefault();
-//         alert('You will have to Log in to do that');
-//     }else {
-//         var options = openDropdown.getElementsByTagName("option");
-//         if (options.length === 1) { // Check if only the default option is present
-//             event.preventDefault();
-//             alert("You have no saved projects. Create a new project first.");
-//         } else {
-//             console.log("Options are present.");
-//         }
-//     }
-// }
 
 
 
@@ -129,8 +98,6 @@ openButton.onclick = function (event) {
     } else {
         openList.style.display = openList.style.display === "none" ? "block" : "none";
     }
-
-
 };
 
 examplesButton.onclick = function (event) {
@@ -145,9 +112,8 @@ openList.addEventListener('click', function (event) {
     const codeId = item.dataset.id;
     console.log(`CodeId for selected dropdown: ${codeId}`);
 
-    // You can call your function to open code here
-    opencode(codeId);
 
+    opencode(codeId);
 
     openList.style.display = "none"; // close the dropdown
 });
@@ -182,14 +148,6 @@ document.addEventListener('click', function (event) {
 });
 
 
-
-// //Open Codes
-// openDropdown.onchange = function() {
-//     var codeId = this.value;
-//     console.log(`CodeId for seleted dropdown: ${codeId}`)
-
-
-//}
 
 // Save Button
 saveBtn.onclick = async function (event) {

@@ -16,8 +16,7 @@ term.center(str(models.Success.objects.count()), width=col_width)
 and line 195 term.center(models.Failure.objects.count(), width=col_width)
 with
 term.center(str(models.Failure.objects.count()), width=col_width)
-
-
 if you ever recreate your virtualenv or reinstall django-q, this patch will be wiped and youd need to apply it again.
 
+Never mind, I just Fixed this bug myself. Leaving it there for future reference if anyone else encounters it.
 """
