@@ -1,6 +1,6 @@
 {
   "name": "runwith-desktop",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Electron desktop shell for RunWith",
   "main": "main.js",
   "productName": "RunWith",
