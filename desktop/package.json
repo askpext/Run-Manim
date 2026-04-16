@@ -4,9 +4,13 @@
   "description": "Electron desktop shell for RunWith",
   "main": "main.js",
   "productName": "RunWith",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/askpext/Run-Manim.git"
+  },
   "scripts": {
     "start": "electron .",
-    "dist": "electron-builder --win nsis"
+    "dist": "electron-builder --win nsis --publish never"
   },
   "keywords": [],
   "author": "",
