@@ -2,7 +2,12 @@
 setlocal
 
 set "PROJECT_ROOT=%~dp0"
-set "VENV_ACTIVATE=%PROJECT_ROOT%env\Scripts\activate"
+if defined RUNWITH_VENV_DIR (
+  set "VENV_DIR=%RUNWITH_VENV_DIR%"
+) else (
+  set "VENV_DIR=%PROJECT_ROOT%env"
+)
+set "VENV_ACTIVATE=%VENV_DIR%\Scripts\activate"
 
 cd /d "%PROJECT_ROOT%"
 

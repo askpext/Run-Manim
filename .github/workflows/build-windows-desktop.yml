@@ -20,18 +20,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Create bundled Python environment
-        shell: pwsh
-        run: |
-          python -m venv env
-          .\env\Scripts\python.exe -m pip install --upgrade pip
-          .\env\Scripts\python.exe -m pip install -r requirements.txt
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:

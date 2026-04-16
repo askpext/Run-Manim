@@ -10,6 +10,7 @@ const projectRoot = app.isPackaged
 const startupScript = path.join(projectRoot, "runwith-start.bat");
 const appUrl = "http://127.0.0.1:8000/manim/";
 const appIcon = path.join(__dirname, "build", "icon.ico");
+const startupLogPath = () => path.join(app.getPath("userData"), "startup.log");
 const dockerDesktopCandidates = [
   "C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe",
   "C:\\Program Files\\Docker\\Docker\\frontend\\Docker Desktop.exe",
@@ -19,6 +20,17 @@ const dockerDesktopCandidates = [
 const backendProcesses = [];
 let mainWindow = null;
 let shuttingDown = false;
+
+function writeStartupLog(message) {
+  const line = `[${new Date().toISOString()}] ${message}\n`;
+
+  try {
+    fs.mkdirSync(app.getPath("userData"), { recursive: true });
+    fs.appendFileSync(startupLogPath(), line, "utf8");
+  } catch {
+    // File logging is best-effort; console logging still carries the message in dev.
+  }
+}
 
 function createLoadingHtml() {
   return `<!doctype html>
@@ -88,6 +100,7 @@ function createLoadingHtml() {
 
 function updateLoadingStatus(message) {
   console.log(message);
+  writeStartupLog(message);
 
   if (!mainWindow || mainWindow.isDestroyed()) {
     return;
@@ -106,6 +119,7 @@ function logProcessOutput(name, stream, isError = false) {
 
     for (const line of lines) {
       const message = `[${name}] ${line}`;
+      writeStartupLog(message);
       if (isError) {
         console.error(message);
       } else {
@@ -115,15 +129,34 @@ function logProcessOutput(name, stream, isError = false) {
   });
 }
 
+function getBackendVenvDir() {
+  if (app.isPackaged) {
+    return path.join(app.getPath("userData"), "backend-env");
+  }
+
+  return path.join(projectRoot, "env");
+}
+
+function getBackendPythonPath() {
+  return path.join(getBackendVenvDir(), "Scripts", "python.exe");
+}
+
+function getBackendEnv() {
+  return {
+    ...process.env,
+    RUNWITH_DESKTOP: "1",
+    RUNWITH_VENV_DIR: getBackendVenvDir(),
+    DJANGO_SECRET_KEY: "devsecret123",
+    DJANGO_ENV: "dev",
+    PYTHONUTF8: "1",
+    PYTHONIOENCODING: "utf-8",
+  };
+}
+
 function spawnStartupTarget(name, target) {
   const child = spawn("cmd.exe", ["/d", "/c", startupScript, target], {
     cwd: projectRoot,
-    env: {
-      ...process.env,
-      RUNWITH_DESKTOP: "1",
-      PYTHONUTF8: "1",
-      PYTHONIOENCODING: "utf-8",
-    },
+    env: getBackendEnv(),
     stdio: ["ignore", "pipe", "pipe"],
     windowsHide: true,
   });
@@ -145,6 +178,17 @@ function spawnStartupTarget(name, target) {
   return child;
 }
 
+async function runDjangoManagementCommand(args) {
+  return runCommand(getBackendPythonPath(), ["manage.py", ...args], {
+    cwd: projectRoot,
+    env: getBackendEnv(),
+  });
+}
+
+function commandLineForLog(command, args) {
+  return [command, ...args].map((part) => (part.includes(" ") ? `"${part}"` : part)).join(" ");
+}
+
 function startBackend() {
   spawnStartupTarget("heartbeat", "heartbeat");
   spawnStartupTarget("qcluster", "qcluster");
@@ -153,6 +197,7 @@ function startBackend() {
 
 function runCommand(command, args, options = {}) {
   return new Promise((resolve) => {
+    writeStartupLog(`Running command: ${commandLineForLog(command, args)}`);
     const child = spawn(command, args, {
       cwd: projectRoot,
       windowsHide: true,
@@ -172,13 +217,110 @@ function runCommand(command, args, options = {}) {
     });
 
     child.on("error", (error) => {
+      writeStartupLog(`Command failed to start: ${commandLineForLog(command, args)} :: ${error.message}`);
       resolve({ ok: false, code: null, stdout, stderr: error.message });
     });
 
     child.on("close", (code) => {
+      if (stdout.trim()) {
+        writeStartupLog(stdout.trim());
+      }
+      if (stderr.trim()) {
+        writeStartupLog(stderr.trim());
+      }
       resolve({ ok: code === 0, code, stdout, stderr });
     });
   });
+}
+
+async function canImportDjango() {
+  const pythonPath = getBackendPythonPath();
+
+  if (!fs.existsSync(pythonPath)) {
+    return false;
+  }
+
+  const result = await runCommand(pythonPath, ["-c", "import django; print(django.get_version())"]);
+  return result.ok;
+}
+
+async function findPythonLauncher() {
+  const candidates = [
+    { command: "py.exe", args: ["-3"] },
+    { command: "python.exe", args: [] },
+  ];
+
+  for (const candidate of candidates) {
+    const result = await runCommand(candidate.command, [...candidate.args, "--version"]);
+    if (result.ok) {
+      return candidate;
+    }
+  }
+
+  throw new Error("Python was not found. Install Python 3, then reopen RunWith.");
+}
+
+async function ensureBackendPythonEnvironment() {
+  updateLoadingStatus("Checking local Python environment...");
+
+  if (await canImportDjango()) {
+    updateLoadingStatus("Python environment is ready.");
+    return;
+  }
+
+  const venvDir = getBackendVenvDir();
+  const requirementsPath = path.join(projectRoot, "requirements.txt");
+  const python = await findPythonLauncher();
+
+  updateLoadingStatus("Creating backend Python environment...");
+  fs.rmSync(venvDir, { recursive: true, force: true });
+
+  const createVenv = await runCommand(python.command, [...python.args, "-m", "venv", venvDir]);
+  if (!createVenv.ok) {
+    throw new Error(`Could not create backend Python environment: ${createVenv.stderr || createVenv.stdout}`);
+  }
+
+  updateLoadingStatus("Installing backend dependencies. This can take a few minutes on first launch...");
+  const pipInstall = await runCommand(getBackendPythonPath(), [
+    "-m",
+    "pip",
+    "install",
+    "--upgrade",
+    "pip",
+  ]);
+
+  if (!pipInstall.ok) {
+    throw new Error(`Could not upgrade pip: ${pipInstall.stderr || pipInstall.stdout}`);
+  }
+
+  const installRequirements = await runCommand(getBackendPythonPath(), [
+    "-m",
+    "pip",
+    "install",
+    "-r",
+    requirementsPath,
+  ]);
+
+  if (!installRequirements.ok) {
+    throw new Error(`Could not install backend dependencies: ${installRequirements.stderr || installRequirements.stdout}`);
+  }
+
+  if (!(await canImportDjango())) {
+    throw new Error("Backend Python environment was created, but Django is still unavailable.");
+  }
+
+  updateLoadingStatus("Python environment is ready.");
+}
+
+async function ensureDatabaseReady() {
+  updateLoadingStatus("Preparing local database...");
+
+  const result = await runDjangoManagementCommand(["migrate", "--noinput"]);
+  if (!result.ok) {
+    throw new Error(`Could not prepare the local database: ${result.stderr || result.stdout}`);
+  }
+
+  updateLoadingStatus("Local database is ready.");
 }
 
 async function isDockerReady() {
@@ -328,7 +470,10 @@ async function shutdownBackend() {
 }
 
 async function boot() {
+  writeStartupLog("Starting RunWith desktop app.");
   createWindow();
+  await ensureBackendPythonEnvironment();
+  await ensureDatabaseReady();
   await waitForDocker();
   startBackend();
   await waitForServer();
