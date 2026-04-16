@@ -1,0 +1,49 @@
+{
+  "name": "runwith-desktop",
+  "version": "1.0.0",
+  "description": "Electron desktop shell for RunWith",
+  "main": "main.js",
+  "productName": "RunWith",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "build": {
+    "appId": "com.runwith.desktop",
+    "asar": false,
+    "files": [
+      "main.js",
+      "package.json",
+      "build/icon.ico"
+    ],
+    "extraResources": [
+      {
+        "from": "../",
+        "to": "runwith",
+        "filter": [
+          "**/*",
+          "!desktop{,/**}",
+          "!.git{,/**}",
+          "!**/__pycache__{,/**}",
+          "!**/*.pyc"
+        ]
+      }
+    ],
+    "win": {
+      "icon": "build/icon.ico",
+      "target": "nsis"
+    },
+    "nsis": {
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico"
+    }
+  },
+  "devDependencies": {
+    "electron": "^41.2.1",
+    "electron-builder": "^26.8.1"
+  }
+}

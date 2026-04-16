@@ -7,6 +7,7 @@ import traceback
 import json
 import ast
 import uuid
+import sys
 
 from .models import Code 
 from .models import ClusterHeartbeat
@@ -26,7 +27,12 @@ from datetime import timedelta
 from django.utils import timezone
 
 import re
- 
+
+for stream_name in ("stdout", "stderr"):
+    stream = getattr(sys, stream_name, None)
+    if stream and hasattr(stream, "reconfigure"):
+        stream.reconfigure(encoding="utf-8", errors="replace")
+
 print('Manim 21-03-2026 11 46 AM - views.py loaded')
 
 def run_manim_command(image_name, base_dir, media_name, code_filename):
@@ -74,7 +80,7 @@ def run_manim_command(image_name, base_dir, media_name, code_filename):
         print(f"EXIT CODE: {exit_code}")
 
         # Get logs
-        logs = container.logs().decode()
+        logs = container.logs().decode("utf-8", errors="replace")
         print("=== CONTAINER LOGS ===")
         print(logs)
         
@@ -116,7 +122,7 @@ def run_docker_command(media_name, code):
 
     try:
         # Write the code to the unique file
-        with open(code_filepath, 'w') as f:
+        with open(code_filepath, 'w', encoding="utf-8") as f:
             f.write(code)
 
         logs = run_manim_command(image_name, base_dir, media_name, code_filename)
